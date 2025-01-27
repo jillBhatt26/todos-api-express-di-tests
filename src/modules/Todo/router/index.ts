@@ -11,9 +11,9 @@ const router: Router = Router();
 
 router.get('/', fetchTodosAll);
 
-router.get('/:id', fetchTodo);
-
 router.post('/', createTodo);
+
+router.get('/:id', fetchTodo);
 
 router.put('/:id', updateTodo);
 
