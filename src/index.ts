@@ -1,5 +1,6 @@
+import os from 'os';
 import cors from 'cors';
-import express, { Application } from 'express';
+import express, { Application, Response } from 'express';
 import { FE_URL, PORT } from '@config';
 import { connectMongoDB } from '@db';
 import appRouter from '@router';
@@ -20,6 +21,13 @@ connectMongoDB()
             })
         );
 
+        // custom middleware and router
+        app.use('/info', (_, res: Response) => {
+            return res.status(200).json({
+                success: true,
+                host: os.hostname()
+            });
+        });
         app.use('/api', appRouter);
         app.use(errorHandlerMW);
 
@@ -33,8 +41,6 @@ connectMongoDB()
         });
     })
     .catch(error => {
-        console.log('1...');
-
         console.log(`❌❌...Server startup error: ${error.message}...❌❌`);
 
         process.exit(1);

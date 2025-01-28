@@ -2,7 +2,6 @@
     "name": "express-ts-api-tests",
     "version": "1.0.0",
     "main": "./dist/index.js",
-    "author": "jill bhatt <bhattjill@gmail.com>",
     "license": "MIT",
     "scripts": {
         "build": "tsc -p ./ && tsc-alias -p ./tsconfig.json",
