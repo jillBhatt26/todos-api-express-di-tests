@@ -6,3 +6,15 @@ export interface ITodo extends Document {
     description: string;
     status: ETodoStatus;
 }
+
+export interface ICreateTodoData {
+    name: string;
+    description: string;
+    status?: ETodoStatus;
+}
+
+export interface IUpdateTodoData {
+    name?: string;
+    description?: string;
+    status?: ETodoStatus;
+}
