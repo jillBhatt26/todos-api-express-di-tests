@@ -1,6 +1,7 @@
 import os from 'os';
 import cors from 'cors';
 import express, { Application, Response } from 'express';
+import 'reflect-metadata';
 import { FE_URL, PORT } from '@config';
 import { connectMongoDB } from '@db';
 import appRouter from '@router';

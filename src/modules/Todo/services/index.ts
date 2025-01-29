@@ -1,7 +1,10 @@
 import { MongooseError } from 'mongoose';
+import { injectable, singleton } from 'tsyringe';
 import { ITodo, ICreateTodoData, IUpdateTodoData } from '../interfaces';
 import Todos from '../model';
 
+@singleton()
+@injectable()
 class TodosServices {
     async getTodosAll(): Promise<ITodo[]> {
         try {
