@@ -1,5 +1,5 @@
 import { DB_URL } from '@config';
-import { connect, Mongoose, MongooseError } from 'mongoose';
+import { connect, disconnect, Mongoose, MongooseError } from 'mongoose';
 
 const connectMongoDB = (): Promise<Mongoose> =>
     new Promise<Mongoose>(async (resolve, reject) => {
@@ -20,4 +20,21 @@ const connectMongoDB = (): Promise<Mongoose> =>
         }
     });
 
-export { connectMongoDB };
+const disconnectMongoDB = (): Promise<boolean> =>
+    new Promise<boolean>(async (resolve, reject) => {
+        try {
+            await disconnect();
+
+            return resolve(true);
+        } catch (error: unknown) {
+            if (error instanceof MongooseError) {
+                return reject(
+                    `❌ ${error.message ?? 'Failed to disconnect MongoDB!'} ❌`
+                );
+            }
+
+            return reject(`❌ Failed to disconnect MongoDB! ❌`);
+        }
+    });
+
+export { connectMongoDB, disconnectMongoDB };
