@@ -1,15 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
-import { singleton, injectable, inject } from 'tsyringe';
+import { singleton, injectable, inject, autoInjectable } from 'tsyringe';
 import Todos from '../model';
 import TodosServices from '../services';
 import { ITodo } from '../interfaces';
 
 @singleton()
 @injectable()
+@autoInjectable()
 class TodosController {
-    constructor(@inject('TodosService') private todosService: TodosServices) {}
+    constructor(@inject(TodosServices) private todosService: TodosServices) {}
 
-    async fetchTodosAll(req: Request, res: Response, next: NextFunction) {
+    public fetchTodosAll = async (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
         try {
             const tasks: ITodo[] = await this.todosService.getTodosAll();
 
@@ -32,7 +37,7 @@ class TodosController {
                 message: 'Failed to fetch all tasks!'
             });
         }
-    }
+    };
 
     async fetchTodoByID(req: Request, res: Response, next: NextFunction) {
         try {

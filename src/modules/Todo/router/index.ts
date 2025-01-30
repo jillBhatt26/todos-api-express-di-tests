@@ -1,22 +1,18 @@
 import { Router } from 'express';
-import {
-    fetchTodo,
-    fetchTodosAll,
-    createTodo,
-    updateTodo,
-    deleteTodo
-} from '../controller';
+import { container } from 'tsyringe';
+import TodosController from '../controller';
 
 const router: Router = Router();
+const todosController = container.resolve(TodosController);
 
-router.get('/', fetchTodosAll);
+router.get('/', todosController.fetchTodosAll);
 
-router.post('/', createTodo);
+router.post('/', todosController.createTodo);
 
-router.get('/:id', fetchTodo);
+router.get('/:id', todosController.fetchTodoByID);
 
-router.put('/:id', updateTodo);
+router.put('/:id', todosController.updateTodo);
 
-router.delete('/:id', deleteTodo);
+router.delete('/:id', todosController.deleteTodo);
 
 export { router as TodoRouter };
