@@ -6,7 +6,7 @@ import Todos from '../model';
 @singleton()
 @injectable()
 class TodosServices {
-    async getTodosAll(): Promise<ITodo[]> {
+    getTodosAll = async (): Promise<ITodo[]> => {
         try {
             const todos: ITodo[] = await Todos.find({});
 
@@ -18,9 +18,9 @@ class TodosServices {
 
             throw new Error('Failed to fetch all tasks!');
         }
-    }
+    };
 
-    async getTodoById(todoID: string): Promise<ITodo> {
+    getTodoById = async (todoID: string): Promise<ITodo> => {
         try {
             const todo: ITodo | null = await Todos.findById(todoID);
 
@@ -34,9 +34,9 @@ class TodosServices {
 
             throw new Error('Failed to fetch task!');
         }
-    }
+    };
 
-    async createNewTodo(createTodoData: ICreateTodoData): Promise<ITodo> {
+    createNewTodo = async (createTodoData: ICreateTodoData): Promise<ITodo> => {
         try {
             const todo: ITodo = await Todos.create(createTodoData);
 
@@ -48,12 +48,12 @@ class TodosServices {
 
             throw new Error('Failed to create task!');
         }
-    }
+    };
 
-    async updateTodo(
+    updateTodo = async (
         id: string,
         updateTodoData: IUpdateTodoData
-    ): Promise<ITodo> {
+    ): Promise<ITodo> => {
         try {
             const todo: ITodo | null = await Todos.findByIdAndUpdate(
                 id,
@@ -73,9 +73,9 @@ class TodosServices {
 
             throw new Error('Failed to update task!');
         }
-    }
+    };
 
-    async deleteTodo(todoID: string): Promise<boolean> {
+    deleteTodo = async (todoID: string): Promise<boolean> => {
         try {
             await Todos.findByIdAndDelete(todoID);
 
@@ -87,7 +87,7 @@ class TodosServices {
 
             throw new Error('Failed to delete task!');
         }
-    }
+    };
 }
 
 export default TodosServices;

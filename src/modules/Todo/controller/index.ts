@@ -38,7 +38,7 @@ class TodosController {
         }
     };
 
-    async fetchTodoByID(req: Request, res: Response, next: NextFunction) {
+    fetchTodoByID = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const taskID: string | undefined = req.params.id;
 
@@ -80,9 +80,9 @@ class TodosController {
                 message: 'Failed to fetch the required task!'
             });
         }
-    }
+    };
 
-    async createTodo(req: Request, res: Response, next: NextFunction) {
+    createTodo = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const { name, description, status } = req.body;
 
@@ -93,9 +93,15 @@ class TodosController {
                 });
             }
 
-            const newTask: ITodo = await this.todosService.createNewTodo({
-                name,
+            // const newTask: ITodo = await this.todosService.createNewTodo({
+            //     name,
+            //     description,
+            //     status
+            // });
+
+            const newTask = await this.todosService.createNewTodo({
                 description,
+                name,
                 status
             });
 
@@ -106,6 +112,8 @@ class TodosController {
                 }
             });
         } catch (error: unknown) {
+            console.log('error: ', error);
+
             if (error instanceof Error) {
                 return next({
                     code: 500,
@@ -118,9 +126,9 @@ class TodosController {
                 message: 'Failed to create new task!'
             });
         }
-    }
+    };
 
-    async updateTodo(req: Request, res: Response, next: NextFunction) {
+    updateTodo = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const taskID: string | undefined = req.params.id;
 
@@ -159,9 +167,9 @@ class TodosController {
                 message: 'Failed to update the task!'
             });
         }
-    }
+    };
 
-    async deleteTodo(req: Request, res: Response, next: NextFunction) {
+    deleteTodo = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const taskID: string | undefined = req.params.id;
 
@@ -190,7 +198,7 @@ class TodosController {
                 message: 'Failed to delete the task!'
             });
         }
-    }
+    };
 }
 
 export default TodosController;
