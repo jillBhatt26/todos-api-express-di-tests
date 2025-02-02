@@ -1,5 +1,5 @@
 describe('Check setup', () => {
-    it('Should check if tests are running in app', () => {
+    it('Should check controllers tests', () => {
         expect(1).toBe(1);
     });
 });

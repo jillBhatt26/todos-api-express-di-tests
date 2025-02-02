@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { singleton, injectable, inject, autoInjectable } from 'tsyringe';
+import { singleton, injectable, inject } from 'tsyringe';
 import TodosServices from '../services';
 import { ITodo } from '../interfaces';
 
 @singleton()
 @injectable()
-@autoInjectable()
 class TodosController {
     constructor(@inject(TodosServices) private todosService: TodosServices) {}
 
@@ -93,15 +92,9 @@ class TodosController {
                 });
             }
 
-            // const newTask: ITodo = await this.todosService.createNewTodo({
-            //     name,
-            //     description,
-            //     status
-            // });
-
-            const newTask = await this.todosService.createNewTodo({
-                description,
+            const newTask: ITodo = await this.todosService.createNewTodo({
                 name,
+                description,
                 status
             });
 
