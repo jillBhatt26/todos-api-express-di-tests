@@ -1,9 +1,8 @@
 import { Router } from 'express';
 import { container } from 'tsyringe';
-import TodosController from '../controller';
+import todosController from '../controller';
 
 const router: Router = Router();
-const todosController = container.resolve(TodosController);
 
 router.get('/', todosController.fetchTodosAll);
 

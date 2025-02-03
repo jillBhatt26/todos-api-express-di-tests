@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { singleton, autoInjectable } from 'tsyringe';
+import { singleton, autoInjectable, container } from 'tsyringe';
 import TodosServices from '../services';
 import { ITodo } from '../interfaces';
 
@@ -190,4 +190,6 @@ class TodosController {
     };
 }
 
-export default TodosController;
+const todosController = container.resolve(TodosController);
+
+export default todosController;
