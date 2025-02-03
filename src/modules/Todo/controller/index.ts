@@ -14,7 +14,7 @@ class TodosController {
         next: NextFunction
     ) => {
         try {
-            const tasks: ITodo[] = await this.todosService.getTodosAll();
+            const tasks: ITodo[] = await this.todosService.find();
 
             return res.status(200).json({
                 success: true,
@@ -48,9 +48,7 @@ class TodosController {
                 });
             }
 
-            const task: ITodo | null = await this.todosService.getTodoById(
-                taskID
-            );
+            const task: ITodo | null = await this.todosService.findById(taskID);
 
             if (!task) {
                 return next({
@@ -92,7 +90,7 @@ class TodosController {
                 });
             }
 
-            const newTask: ITodo = await this.todosService.createNewTodo({
+            const newTask: ITodo = await this.todosService.create({
                 name,
                 description,
                 status
@@ -105,8 +103,6 @@ class TodosController {
                 }
             });
         } catch (error: unknown) {
-            console.log('error: ', error);
-
             if (error instanceof Error) {
                 return next({
                     code: 500,
@@ -135,7 +131,7 @@ class TodosController {
             const { name, description, status } = req.body;
 
             const updatedTask: ITodo | null =
-                await this.todosService.updateTodo(taskID, {
+                await this.todosService.findByIdAndUpdate(taskID, {
                     name,
                     description,
                     status
@@ -173,7 +169,7 @@ class TodosController {
                 });
             }
 
-            await this.todosService.deleteTodo(taskID);
+            await this.todosService.findByIdAndDelete(taskID);
 
             return res.status(200).json({
                 success: true

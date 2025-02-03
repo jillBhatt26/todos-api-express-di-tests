@@ -1,9 +1,10 @@
 import 'reflect-metadata';
 import initExpressApp from '@app';
 import { PORT } from '@config';
-import { connectMongoDB } from '@db';
+import connection from '@db/connection';
 
-connectMongoDB()
+connection
+    .connectMongoDB()
     .then(conn => {
         const app = initExpressApp();
 
