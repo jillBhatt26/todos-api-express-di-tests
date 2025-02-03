@@ -1,12 +1,13 @@
 import { ICustomError } from '@interfaces';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 const errorHandlerMW = async (
     error: ICustomError,
     _: Request,
-    res: Response
+    res: Response,
+    __: NextFunction
 ) => {
-    return res.status(500).json({
+    return res.status(error.code).json({
         success: false,
         error
     });
