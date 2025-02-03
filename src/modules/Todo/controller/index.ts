@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
-import { singleton, injectable, inject } from 'tsyringe';
+import { singleton, autoInjectable } from 'tsyringe';
 import TodosServices from '../services';
 import { ITodo } from '../interfaces';
 
 @singleton()
-@injectable()
+@autoInjectable()
 class TodosController {
-    constructor(@inject(TodosServices) private todosService: TodosServices) {}
+    constructor(private todosService: TodosServices) {}
 
     public fetchTodosAll = async (
         req: Request,
