@@ -1,27 +1,33 @@
-import { Schema, model } from 'mongoose';
+import { Model, Schema, model } from 'mongoose';
+import { container } from 'tsyringe';
+import { IDBModel } from '@interfaces';
 import { ETodoStatus } from '../enums';
 import { ITodo } from '../interfaces';
 
-const TodoSchema = new Schema<ITodo>(
-    {
-        name: {
-            type: String,
-            required: true
+class TodosModel implements IDBModel<ITodo> {
+    schema: Schema<ITodo> = new Schema<ITodo>(
+        {
+            name: {
+                type: String,
+                required: true
+            },
+            description: {
+                type: String,
+                required: true
+            },
+            status: {
+                type: String,
+                enum: ETodoStatus,
+                required: true,
+                default: ETodoStatus.PENDING
+            }
         },
-        description: {
-            type: String,
-            required: true
-        },
-        status: {
-            type: String,
-            enum: ETodoStatus,
-            required: true,
-            default: ETodoStatus.PENDING
-        }
-    },
-    { timestamps: true }
-);
+        { timestamps: true }
+    );
 
-const Todos = model<ITodo>('todo', TodoSchema);
+    model: Model<ITodo> = model<ITodo>('todos', this.schema);
+}
 
-export default Todos;
+container.register<IDBModel<ITodo>>(TodosModel, { useClass: TodosModel });
+
+export default TodosModel;

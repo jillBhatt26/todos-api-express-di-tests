@@ -1,14 +1,20 @@
-import { MongooseError } from 'mongoose';
+import { Model, MongooseError } from 'mongoose';
 import { autoInjectable, singleton } from 'tsyringe';
 import { ITodo, ICreateTodoData, IUpdateTodoData } from '../interfaces';
-import Todos from '../model';
+import TodosModel from '../model';
 
 @singleton()
 @autoInjectable()
 class TodosServices {
+    model: Model<ITodo>;
+
+    constructor(private dbModel: TodosModel) {
+        this.model = dbModel.model;
+    }
+
     getTodosAll = async (): Promise<ITodo[]> => {
         try {
-            const todos: ITodo[] = await Todos.find({});
+            const todos: ITodo[] = await this.model.find({});
 
             return todos;
         } catch (error: unknown) {
@@ -22,7 +28,7 @@ class TodosServices {
 
     getTodoById = async (todoID: string): Promise<ITodo> => {
         try {
-            const todo: ITodo | null = await Todos.findById(todoID);
+            const todo: ITodo | null = await this.model.findById(todoID);
 
             if (!todo) throw new Error('No task found!');
 
@@ -38,7 +44,7 @@ class TodosServices {
 
     createNewTodo = async (createTodoData: ICreateTodoData): Promise<ITodo> => {
         try {
-            const todo: ITodo = await Todos.create(createTodoData);
+            const todo: ITodo = await this.model.create(createTodoData);
 
             return todo;
         } catch (error: unknown) {
@@ -55,7 +61,7 @@ class TodosServices {
         updateTodoData: IUpdateTodoData
     ): Promise<ITodo> => {
         try {
-            const todo: ITodo | null = await Todos.findByIdAndUpdate(
+            const todo: ITodo | null = await this.model.findByIdAndUpdate(
                 id,
                 {
                     $set: updateTodoData
@@ -77,7 +83,7 @@ class TodosServices {
 
     deleteTodo = async (todoID: string): Promise<boolean> => {
         try {
-            await Todos.findByIdAndDelete(todoID);
+            await this.model.findByIdAndDelete(todoID);
 
             return true;
         } catch (error: unknown) {
