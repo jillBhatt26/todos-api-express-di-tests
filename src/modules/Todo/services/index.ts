@@ -9,7 +9,7 @@ class TodosServices {
     model: Model<ITodo>;
 
     constructor(private dbModel: TodosModel) {
-        this.model = dbModel.model;
+        this.model = this.dbModel.model;
     }
 
     getTodosAll = async (): Promise<ITodo[]> => {
