@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { TodoRouter } from '@modules/Todo';
+import { TodosRouter } from '@modules/Todo';
 
 const appRouter: Router = Router();
 
-appRouter.use('/todos', TodoRouter);
+appRouter.use('/todos', TodosRouter);
 
 export default appRouter;

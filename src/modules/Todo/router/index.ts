@@ -1,17 +1,16 @@
 import { Router } from 'express';
-import { container } from 'tsyringe';
 import todosController from '../controller';
 
-const router: Router = Router();
+const TodosRouter: Router = Router();
 
-router.get('/', todosController.fetchTodosAll);
+TodosRouter.get('/', todosController.fetchTodosAll);
 
-router.post('/', todosController.createTodo);
+TodosRouter.post('/', todosController.createTodo);
 
-router.get('/:id', todosController.fetchTodoByID);
+TodosRouter.get('/:id', todosController.fetchTodoByID);
 
-router.put('/:id', todosController.updateTodo);
+TodosRouter.put('/:id', todosController.updateTodo);
 
-router.delete('/:id', todosController.deleteTodo);
+TodosRouter.delete('/:id', todosController.deleteTodo);
 
-export { router as TodoRouter };
+export { TodosRouter };
