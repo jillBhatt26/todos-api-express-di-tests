@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { singleton, autoInjectable, container } from 'tsyringe';
 import TodosServices from '../services';
 import { ITodo } from '../interfaces';
+import { ICustomError } from '@interfaces';
 
 @singleton()
 @autoInjectable()
@@ -128,6 +129,16 @@ class TodosController {
                 });
             }
 
+            const taskToUpdate: ITodo | null = await this.todosService.findById(
+                taskID
+            );
+
+            if (!taskToUpdate)
+                return next({
+                    code: 400,
+                    message: 'Task to update not found!'
+                });
+
             const { name, description, status } = req.body;
 
             const updatedTask: ITodo | null =
@@ -166,6 +177,17 @@ class TodosController {
                 return next({
                     code: 400,
                     message: 'Task id not provided!'
+                });
+            }
+
+            const taskToDelete: ITodo | null = await this.todosService.findById(
+                taskID
+            );
+
+            if (!taskToDelete) {
+                return next({
+                    code: 400,
+                    message: 'Task to delete not found!'
                 });
             }
 
