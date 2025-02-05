@@ -11,6 +11,7 @@ module.exports = {
     preset: 'ts-jest',
     moduleFileExtensions: ['ts', 'js', 'json'],
     moduleDirectories: ['node_modules', 'src'],
+    modulePathIgnorePatterns: ['<rootDir>/dist', '<rootDir>/dist'],
     // moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
     //     prefix: 'src'
     // })
