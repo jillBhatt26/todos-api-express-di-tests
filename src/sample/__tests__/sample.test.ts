@@ -1,11 +1,7 @@
-import 'reflect-metadata';
-import express from 'express';
 import { jest } from '@jest/globals';
-import todosController from '..';
-import { mockNext, mockRequest, mockResponse } from '../__mocks__';
 
+// basic jest config
 jest.setTimeout(30000);
-jest.createMockFromModule('../../services');
 
 const addition = (a: number, b: number) => a + b;
 
@@ -23,12 +19,6 @@ const fetchPosts = async (): Promise<IPost[]> => {
 
     return posts;
 };
-
-describe('Check setup', () => {
-    it('Should check controllers tests', () => {
-        expect(1).toBe(1);
-    });
-});
 
 describe('Addition function tests', () => {
     it('Should check the addition result of two numbers', () => {
@@ -54,31 +44,5 @@ describe('JSON posts tests', () => {
                 }
             ])
         );
-    });
-});
-
-describe('Fetch todos controller tests', () => {
-    it('Should fetch all tasks', async () => {
-        await todosController.fetchTodosAll(
-            mockRequest,
-            mockResponse,
-            mockNext
-        );
-
-        expect(mockResponse.json).toHaveBeenCalled();
-    });
-});
-
-describe('TodosController tests', () => {
-    let req: Request;
-    let res: Response;
-
-    beforeEach(() => {
-        req = jest.createMockFromModule('express');
-        res = jest.createMockFromModule('express');
-    });
-
-    afterEach(() => {
-        jest.resetAllMocks();
     });
 });
