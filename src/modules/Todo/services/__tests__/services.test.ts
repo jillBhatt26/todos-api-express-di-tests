@@ -63,6 +63,10 @@ describe('Todos Services tests', () => {
         conn = await connection.connectMongoDB(TEST_DB_URL);
     });
 
+    beforeEach(async () => {
+        await todosServices.deleteAll();
+    });
+
     describe('POST /todos', () => {
         it('Should insert a new document in the collection', async () => {
             const todo: ITodo = await todosServices.create({
@@ -78,16 +82,88 @@ describe('Todos Services tests', () => {
         });
     });
 
-    describe('GET /todos', () => {});
+    describe('GET /todos', () => {
+        it('Should return all documents of collection', async () => {
+            const todos: ITodo[] = await todosServices.find();
 
-    describe('GET /todos/:id', () => {});
+            expect(todos).not.toBeNull();
+            expect(todos).not.toBeUndefined();
+            expect(todos).toHaveLength(0); // since we're deleting all the documents before each test
+        });
+    });
 
-    describe('PUT /todos/:id', () => {});
+    describe('GET /todos/:id', () => {
+        it('Should find the task with the provided id', async () => {
+            const newTodo: ITodo = await todosServices.create({
+                name: 'Name 2',
+                description: 'Description 2',
+                status: ETodoStatus.PENDING
+            });
 
-    describe('DELETE /todos/:id', () => {});
+            const todo: ITodo | null = await todosServices.findById(newTodo.id);
+
+            expect(todo).not.toBeNull();
+            expect(todo).not.toBeUndefined();
+
+            expect(todo).toHaveProperty('_id');
+            expect(todo).toHaveProperty('name');
+            expect(todo).toHaveProperty('description');
+            expect(todo).toHaveProperty('status');
+
+            expect(todo!.id).toStrictEqual(newTodo.id);
+            expect(todo!.name).toStrictEqual(newTodo.name);
+            expect(todo!.description).toStrictEqual(newTodo.description);
+            expect(todo!.status).toStrictEqual(newTodo.status);
+        });
+    });
+
+    describe('PUT /todos/:id', () => {
+        it('Should update a document', async () => {
+            const newTodo: ITodo = await todosServices.create({
+                name: 'Name 2',
+                description: 'Description 2',
+                status: ETodoStatus.PENDING
+            });
+
+            const updatedTodo: ITodo | null =
+                await todosServices.findByIdAndUpdate(newTodo.id, {
+                    status: ETodoStatus.PROGRESS
+                });
+
+            expect(updatedTodo).not.toBeNull();
+            expect(updatedTodo).not.toBeUndefined();
+
+            expect(updatedTodo).toHaveProperty('_id');
+            expect(updatedTodo).toHaveProperty('name');
+            expect(updatedTodo).toHaveProperty('description');
+            expect(updatedTodo).toHaveProperty('status');
+
+            expect(updatedTodo!.id).toStrictEqual(newTodo.id);
+            expect(updatedTodo!.name).toStrictEqual(newTodo.name);
+            expect(updatedTodo!.description).toStrictEqual(newTodo.description);
+            expect(updatedTodo!.status).toStrictEqual(ETodoStatus.PROGRESS);
+        });
+    });
+
+    describe('DELETE /todos/:id', () => {
+        it('Should delete a document', async () => {
+            const newTodo: ITodo = await todosServices.create({
+                name: 'Name 2',
+                description: 'Description 2',
+                status: ETodoStatus.PENDING
+            });
+
+            const deletedTodo: ITodo | null =
+                await todosServices.findByIdAndDelete(newTodo.id);
+
+            expect(deletedTodo).not.toBeNull();
+            expect(deletedTodo).not.toBeUndefined();
+        });
+    });
 
     afterAll(async () => {
         await conn.connection.dropCollection('todos');
+        await conn.connection.dropDatabase();
         await connection.disconnectMongoDB();
     });
 });
