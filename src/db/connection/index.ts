@@ -5,10 +5,10 @@ import { DB_URL } from '@config';
 @singleton()
 @autoInjectable()
 class Connection {
-    public connectMongoDB = (): Promise<Mongoose> =>
+    public connectMongoDB = (url?: string): Promise<Mongoose> =>
         new Promise<Mongoose>(async (resolve, reject) => {
             try {
-                const conn: Mongoose = await connect(DB_URL);
+                const conn: Mongoose = await connect(url ?? DB_URL);
 
                 return resolve(conn);
             } catch (error: unknown) {

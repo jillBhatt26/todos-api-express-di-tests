@@ -2,9 +2,10 @@ import 'reflect-metadata';
 import { Application } from 'express';
 import request from 'supertest';
 import initExpressApp from '@app';
+import { JEST_TIMEOUT } from '@constants';
 import connection from '@db/connection';
 
-jest.setTimeout(30000);
+jest.setTimeout(JEST_TIMEOUT);
 
 describe('Check supertest e2e', () => {
     let app: Application;

@@ -8,6 +8,7 @@ module.exports = {
         '^.+.tsx?$': ['ts-jest', {}]
     },
     clearMocks: true,
+    verbose: true,
     preset: 'ts-jest',
     moduleFileExtensions: ['ts', 'js', 'json'],
     moduleDirectories: ['node_modules', 'src'],
@@ -18,6 +19,7 @@ module.exports = {
     moduleNameMapper: {
         '^@app': '<rootDir>/src/app/$1',
         '^@config': '<rootDir>/src/config/$1',
+        '^@constants': '<rootDir>/src/constants/$1',
         '^@db/(.*)': '<rootDir>/src/db/$1',
         '^@interfaces': '<rootDir>/src/interfaces/$1',
         '^@middleware/(.*)': '<rootDir>/src/middleware/$1',

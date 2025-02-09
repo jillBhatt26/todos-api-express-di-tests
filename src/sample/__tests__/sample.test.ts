@@ -1,7 +1,8 @@
 import { jest } from '@jest/globals';
+import { JEST_TIMEOUT } from '@constants';
 
 // basic jest config
-jest.setTimeout(30000);
+jest.setTimeout(JEST_TIMEOUT);
 
 const addition = (a: number, b: number) => a + b;
 

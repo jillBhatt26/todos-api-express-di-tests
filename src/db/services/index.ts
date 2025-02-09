@@ -50,6 +50,20 @@ class DBServices<T> {
         }
     };
 
+    insertMany = async (createResourceDataArray: Partial<T>[]) => {
+        try {
+            const data = await this.model.insertMany(createResourceDataArray);
+
+            return data;
+        } catch (error: unknown) {
+            if (error instanceof MongooseError) {
+                throw new Error(error.message);
+            }
+
+            throw new Error('Failed to create data!');
+        }
+    };
+
     findByIdAndUpdate = async (
         resourceId: string,
         updateResourceData: Partial<T>
@@ -82,6 +96,20 @@ class DBServices<T> {
             );
 
             return data;
+        } catch (error: unknown) {
+            if (error instanceof MongooseError) {
+                throw new Error(error.message);
+            }
+
+            throw new Error('Failed to delete data!');
+        }
+    };
+
+    deleteAll = async (): Promise<boolean> => {
+        try {
+            await this.model.deleteMany({});
+
+            return true;
         } catch (error: unknown) {
             if (error instanceof MongooseError) {
                 throw new Error(error.message);

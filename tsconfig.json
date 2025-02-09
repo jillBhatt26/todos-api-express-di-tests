@@ -13,6 +13,7 @@
         "paths": {
             "@app": ["app"],
             "@config": ["config"],
+            "@constants": ["constants"],
             "@db/*": ["db/*"],
             "@interfaces": ["interfaces"],
             "@middleware/*": ["middleware/*"],
