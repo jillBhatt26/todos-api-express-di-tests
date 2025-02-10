@@ -1,7 +1,7 @@
 import os from 'os';
 import express, { Application, Response } from 'express';
 import cors from 'cors';
-import { FE_URL } from '@config';
+import { FE_URL } from '@config/env';
 import { errorHandlerMW } from '@middleware/error';
 import appRouter from '@router';
 

@@ -1,6 +1,6 @@
 import { connect, disconnect, Mongoose, MongooseError } from 'mongoose';
 import { autoInjectable, container, singleton } from 'tsyringe';
-import { DB_URL } from '@config';
+import { DB_URL } from '@config/env';
 
 @singleton()
 @autoInjectable()

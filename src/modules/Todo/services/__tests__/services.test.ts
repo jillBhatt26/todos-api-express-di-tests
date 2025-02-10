@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { Mongoose } from 'mongoose';
 import { container } from 'tsyringe';
 import { jest } from '@jest/globals';
-import { TEST_DB_URL } from '@config';
+import { TEST_DB_URL } from '@config/env';
 import { JEST_TIMEOUT } from '@constants';
 import connection from '@db/connection';
 import { ITodo } from '@modules/Todo/interfaces';
@@ -67,7 +67,7 @@ describe('Todos Services tests', () => {
         await todosServices.deleteAll();
     });
 
-    describe('POST /todos', () => {
+    describe('CREATE TODO', () => {
         it('Should insert a new document in the collection', async () => {
             const todo: ITodo = await todosServices.create({
                 name: 'Name 1',
@@ -82,7 +82,7 @@ describe('Todos Services tests', () => {
         });
     });
 
-    describe('GET /todos', () => {
+    describe('GET ALL TODOS', () => {
         it('Should return all documents of collection', async () => {
             const todos: ITodo[] = await todosServices.find();
 
@@ -92,7 +92,7 @@ describe('Todos Services tests', () => {
         });
     });
 
-    describe('GET /todos/:id', () => {
+    describe('GET TODO BY ID', () => {
         it('Should find the task with the provided id', async () => {
             const newTodo: ITodo = await todosServices.create({
                 name: 'Name 2',
@@ -117,7 +117,7 @@ describe('Todos Services tests', () => {
         });
     });
 
-    describe('PUT /todos/:id', () => {
+    describe('UPDATE TODO', () => {
         it('Should update a document', async () => {
             const newTodo: ITodo = await todosServices.create({
                 name: 'Name 2',
@@ -145,7 +145,7 @@ describe('Todos Services tests', () => {
         });
     });
 
-    describe('DELETE /todos/:id', () => {
+    describe('DELETE TODO', () => {
         it('Should delete a document', async () => {
             const newTodo: ITodo = await todosServices.create({
                 name: 'Name 2',

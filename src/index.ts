@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import initExpressApp from '@app';
-import { PORT } from '@config';
+import { PORT } from '@config/env';
 import connection from '@db/connection';
 
 connection

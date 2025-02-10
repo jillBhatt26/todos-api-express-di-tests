@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import { singleton, autoInjectable, container } from 'tsyringe';
 import TodosServices from '../services';
 import { ITodo } from '../interfaces';
-import { ICustomError } from '@interfaces';
 
 @singleton()
 @autoInjectable()
@@ -191,10 +190,14 @@ class TodosController {
                 });
             }
 
-            await this.todosService.findByIdAndDelete(taskID);
+            const deletedTodo: ITodo | null =
+                await this.todosService.findByIdAndDelete(taskID);
 
             return res.status(200).json({
-                success: true
+                success: true,
+                data: {
+                    deletedTodo
+                }
             });
         } catch (error: unknown) {
             if (error instanceof Error) {

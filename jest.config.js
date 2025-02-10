@@ -18,12 +18,14 @@ module.exports = {
     // })
     moduleNameMapper: {
         '^@app': '<rootDir>/src/app/$1',
-        '^@config': '<rootDir>/src/config/$1',
+        '^@config/(.*)': '<rootDir>/src/config/$1',
         '^@constants': '<rootDir>/src/constants/$1',
         '^@db/(.*)': '<rootDir>/src/db/$1',
         '^@interfaces': '<rootDir>/src/interfaces/$1',
         '^@middleware/(.*)': '<rootDir>/src/middleware/$1',
         '^@modules/(.*)': '<rootDir>/src/modules/$1',
         '^@router': '<rootDir>/src/router/$1'
-    }
+    },
+    testSequencer: './test.sequencer.js',
+    testMatch: ['**/e2e/*.test.[jt]s?(x)', '**/__tests__/*.test.[jt]s?(x)']
 };
