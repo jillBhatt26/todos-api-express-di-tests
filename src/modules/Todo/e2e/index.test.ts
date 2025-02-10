@@ -15,6 +15,7 @@ describe('TODOS CONTROLLERS SUITE', () => {
     let conn: Mongoose;
     const BASE_API_URL: string = `/api/todos`;
     let testTodoID: string;
+    let nonTodoID: string = '623a0996cd97284ad4fcd9c6';
 
     beforeAll(async () => {
         conn = await connection.connectMongoDB(TEST_DB_URL);
@@ -32,6 +33,24 @@ describe('TODOS CONTROLLERS SUITE', () => {
     });
 
     describe('POST /todos', () => {
+        it('Should validate the create todo data', async () => {
+            const response = await request(app).post(BASE_API_URL).send({
+                name: '',
+                description: '',
+                status: ETodoStatus.PENDING
+            });
+
+            expect(response.status).toEqual(400);
+            expect(response.body.success).toEqual(false);
+            expect(response.body).not.toHaveProperty('data');
+            expect(response.body).toHaveProperty('error');
+            expect(response.body.error).toHaveProperty('code');
+            expect(response.body.error).toHaveProperty('message');
+            expect(response.body.error.message).toEqual(
+                'Please provide all task details'
+            );
+        });
+
         it('Create a new task', async () => {
             const response = await request(app).post(BASE_API_URL).send({
                 name: 'Test task name 1',
@@ -64,6 +83,24 @@ describe('TODOS CONTROLLERS SUITE', () => {
     });
 
     describe('GET /todos/:id', () => {
+        it('Should not find a task with wrong id', async () => {
+            const response = await request(app).get(
+                `${BASE_API_URL}/${nonTodoID}`
+            );
+
+            expect(response.status).toEqual(400);
+            expect(response.body.success).toEqual(false);
+
+            expect(response.body).not.toHaveProperty('data');
+            expect(response.body).toHaveProperty('error');
+
+            expect(response.body.error).toHaveProperty('code');
+            expect(response.body.error).toHaveProperty('message');
+            expect(response.body.error.message).toStrictEqual(
+                'Task not found!'
+            );
+        });
+
         it('Should find a task with given id', async () => {
             const response = await request(app).get(
                 `${BASE_API_URL}/${testTodoID}`
@@ -73,6 +110,8 @@ describe('TODOS CONTROLLERS SUITE', () => {
             expect(response.body.success).toEqual(true);
 
             expect(response.body.data).toHaveProperty('task');
+
+            expect(response.body.data.task).not.toBeNull();
 
             expect(response.body.data.task).toHaveProperty('_id', testTodoID);
         });
@@ -91,6 +130,7 @@ describe('TODOS CONTROLLERS SUITE', () => {
 
             expect(response.body.data).toHaveProperty('updatedTask');
 
+            expect(response.body.data.updatedTask).not.toBeNull();
             expect(response.body.data.updatedTask).toHaveProperty(
                 '_id',
                 testTodoID
@@ -116,6 +156,7 @@ describe('TODOS CONTROLLERS SUITE', () => {
             expect(response.body.success).toEqual(true);
 
             expect(response.body.data).toHaveProperty('deletedTodo');
+            expect(response.body.data.deletedTodo).not.toBeNull();
 
             expect(response.body.data.deletedTodo).toHaveProperty(
                 '_id',
