@@ -25,7 +25,7 @@ describe('TODOS CONTROLLERS SUITE', () => {
 
     describe('INFO', () => {
         it('Should test the info route', async () => {
-            const response = await request(app).get('/info');
+            const response = await request(app).get('/api/info');
 
             expect(response.status).toEqual(200);
             expect(response.body.success).toEqual(true);
