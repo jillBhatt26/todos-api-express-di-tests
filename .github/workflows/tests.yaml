@@ -26,6 +26,16 @@ jobs:
             - name: Git checkout
               uses: actions/checkout@v4
 
+            - name: Generate env file
+              run: |
+                  touch .env
+
+                  echo NODE_ENV = ${{ secrets.NODE_ENV }} >> .env
+                  echo PORT = ${{ secrets.PORT }} >> .env
+                  echo DB_URL = ${{ secrets.DB_URL }} >> .env
+                  echo TEST_DB_URL = ${{ secrets.TEST_DB_URL }} >> .env
+                  echo FE_URL = ${{ secrets.FE_URL }} >> .env
+
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v4
               with:
@@ -49,5 +59,8 @@ jobs:
             - name: Run jest tests
               run: yarn test
 
-            - name: Install production dependencies
-              run: yarn install --production --frozen-lockfile
+            - name: Remove node_modules containing dev dependencies
+              run: rm -rf node_modules
+
+            # - name: Install only production dependencies
+            #   run: yarn install --production --frozen-lockfile
