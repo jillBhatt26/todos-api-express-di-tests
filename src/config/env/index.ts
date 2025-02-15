@@ -5,6 +5,6 @@ const PORT = parseInt(process.env.PORT!) ?? 5000;
 const DB_URL = process.env.DB_URL ?? '';
 const TEST_DB_URL = process.env.TEST_DB_URL ?? '';
 const FE_URL = process.env.FE_URL ?? '';
-const HOST = process.env.RENDER_HOST ?? 'localhost';
+const HOST = process.env.RENDER_EXTERNAL_HOSTNAME ?? 'localhost';
 
 export { NODE_ENV, HOST, PORT, DB_URL, TEST_DB_URL, FE_URL };
