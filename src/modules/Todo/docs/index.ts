@@ -1,207 +1,3 @@
-// /**
-//  * @swagger
-//  *      /data:
-//  *          get:
-//  *              summary: Fetches all the data
-//  *              tags: [Data]
-//  *              responses:
-//  *                  200:
-//  *                      description: Returns an array of all the data in the data key of the response object
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseSuccess'
-//  *
-//  *                  500:
-//  *                      description: Internal server error
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseFailure'
-//  *
-//  */
-
-// /**
-//  * @swagger
-//  *      /data:
-//  *          post:
-//  *              summary: Creates new data
-//  *              tags: [Data]
-//  *              requestBody:
-//  *                  required: true
-//  *                  content:
-//  *                      application/json:
-//  *                          schema:
-//  *                              type: array
-//  *                              $ref: '#/components/schemas/CreateData'
-//  *
-//  *              responses:
-//  *                  200:
-//  *                      description: The updated data array
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseSuccess'
-//  *
-//  *                  400:
-//  *                      description: Invalid request body provided
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseFailure'
-//  *
-//  *                  500:
-//  *                      description: Internal server error
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseFailure'
-//  */
-
-// /**
-//  * @swagger
-//  *      /data/{id}:
-//  *          get:
-//  *              summary: Finds the data of the id provided
-//  *              tags: [Data]
-//  *
-//  *              parameters:
-//  *                  - in: path
-//  *                    name: id
-//  *                    schema:
-//  *                      type: string
-//  *                    required: true
-//  *                    description: The id of the data to be fetched
-//  *
-//  *              responses:
-//  *                  200:
-//  *                      description: The fetched data
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseSuccess'
-//  *
-//  *                  404:
-//  *                      description: Data to fetch not found
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseFailure'
-//  *
-//  *                  500:
-//  *                      description: Internal server error
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseFailure'
-//  */
-
-// /**
-//  * @swagger
-//  *      /data/{id}:
-//  *          put:
-//  *              summary: Finds and updates the required data
-//  *              tags: [Data]
-//  *
-//  *              parameters:
-//  *                  - in: path
-//  *                    name: id
-//  *                    schema:
-//  *                      type: string
-//  *                    required: true
-//  *                    description: The id of the data to be deleted
-//  *
-//  *              requestBody:
-//  *                  required: true
-//  *                  content:
-//  *                      application/json:
-//  *                          schema:
-//  *                              type: array
-//  *                              $ref: '#/components/schemas/UpdateData'
-//  *
-//  *              responses:
-//  *                  200:
-//  *                      description: The updated data
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/Data'
-//  *
-//  *                  400:
-//  *                      description: Invalid request body provided
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseFailure'
-//  *
-//  *                  404:
-//  *                      description: Data to update not found
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseFailure'
-//  *
-//  *                  500:
-//  *                      description: Internal server error
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseFailure'
-//  */
-
-// /**
-//  * @swagger
-//  *      /data/{id}:
-//  *          delete:
-//  *              summary: Finds and deletes the required data
-//  *              tags: [Data]
-//  *
-//  *              parameters:
-//  *                  - in: path
-//  *                    name: id
-//  *                    schema:
-//  *                      type: string
-//  *                    required: true
-//  *                    description: The id of the data to be deleted
-//  *
-//  *              responses:
-//  *                  200:
-//  *                      description: Delete data confirmation
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseSuccess'
-//  *
-//  *                  404:
-//  *                      description: Data to delete not found
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseFailure'
-//  *
-//  *                  500:
-//  *                      description: Internal server error
-//  *                      content:
-//  *                          application/json:
-//  *                              schema:
-//  *                                  type: object
-//  *                                  $ref: '#/components/schemas/ServerResponseFailure'
-//  */
-
 // **********************
 // ENUMS
 // **********************
@@ -338,6 +134,23 @@
  *                          todo:
  *                              $ref: '#/components/schemas/Todo'
  *
+ *                          newTask:
+ *                              $ref: '#/components/schemas/Todo'
+ *
+ *                          updatedTask:
+ *                              $ref: '#/components/schemas/Todo'
+ *
+ *                          deletedTask:
+ *                              $ref: '#/components/schemas/Todo'
+ *
+ *              example:
+ *                  success: true
+ *                  task:
+ *                      id: 67b0d5a85ad87a9b5b3e6662
+ *                      name: Name of Todo
+ *                      description: Description of Todo
+ *                      status: pending / progress / completed
+ *
  *              required:
  *                  - success
  *
@@ -355,8 +168,28 @@
  *                      type: string
  *                      description: Failure reason
  *
+ *              example:
+ *                  success: false
+ *                  error: Something went wrong!
+ *
  *              required:
  *                  - success
+ */
+
+// **********************
+// TAGS
+// **********************
+
+/**
+ * @swagger
+ *  tags:
+ *      name: Info
+ *      description: Health check and project info route
+ *
+ * @swagger
+ *  tags:
+ *      name: Todos
+ *      description: APIs to manage Todos
  */
 
 // **********************
@@ -365,9 +198,6 @@
 
 /**
  * @swagger
- * tags:
- *      name: Info
- *      description: Health check route
  *
  * /info:
  *   get:
@@ -380,7 +210,195 @@
 
 /**
  * @swagger
- * tags:
- *      name: Todos
- *      description: API to manage todos
+ *      /todos:
+ *          get:
+ *              summary: Fetches all the todos
+ *              tags: [Todos]
+ *              responses:
+ *                  200:
+ *                      description: Returns an array of all the todos
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseSuccess'
+ *
+ *                  500:
+ *                      description: Internal server error
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseFailure'
+ */
+
+/**
+ * @swagger
+ *      /todos:
+ *          post:
+ *              summary: Creates new todo
+ *              tags: [Todos]
+ *              requestBody:
+ *                  required: true
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: object
+ *                              $ref: '#/components/schemas/CreateTodo'
+ *
+ *              responses:
+ *                  200:
+ *                      description: The newly created Todo object
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseSuccess'
+ *
+ *                  400:
+ *                      description: Invalid request body provided
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseFailure'
+ *
+ *                  500:
+ *                      description: Internal server error
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseFailure'
+ */
+
+/**
+ * @swagger
+ *      /todos/{id}:
+ *          get:
+ *              summary: Finds the Todo using the id provided
+ *              tags: [Todos]
+ *
+ *              parameters:
+ *                  - in: path
+ *                    name: id
+ *                    schema:
+ *                      type: string
+ *                    required: true
+ *                    description: The id of the Todo to be fetched
+ *
+ *              responses:
+ *                  200:
+ *                      description: The fetched Todo
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseSuccess'
+ *
+ *                  404:
+ *                      description: Todo to fetch not found
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseFailure'
+ *
+ *                  500:
+ *                      description: Internal server error
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseFailure'
+
+ *          put:
+ *              summary: Finds and updates the required Todo
+ *              tags: [Todos]
+ *
+ *              parameters:
+ *                  - in: path
+ *                    name: id
+ *                    schema:
+ *                      type: string
+ *                    required: true
+ *                    description: The id of the Todo to be updated
+ *
+ *              requestBody:
+ *                  required: true
+ *                  content:
+ *                      application/json:
+ *                          schema:
+ *                              type: array
+ *                              $ref: '#/components/schemas/UpdateTodo'
+ *
+ *              responses:
+ *                  200:
+ *                      description: The updated Todo
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/Todo'
+ *
+ *                  400:
+ *                      description: Invalid request body provided
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseFailure'
+ *
+ *                  404:
+ *                      description: Todo to update not found
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseFailure'
+ *
+ *                  500:
+ *                      description: Internal server error
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseFailure'
+ * 
+ *          delete:
+ *              summary: Finds and deletes the required Todo
+ *              tags: [Todos]
+ *
+ *              parameters:
+ *                  - in: path
+ *                    name: id
+ *                    schema:
+ *                      type: string
+ *                    required: true
+ *                    description: The id of the Todo to be deleted
+ *
+ *              responses:
+ *                  200:
+ *                      description: Delete Todo confirmation
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseSuccess'
+ *
+ *                  404:
+ *                      description: Todo to delete not found
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseFailure'
+ *
+ *                  500:
+ *                      description: Internal server error
+ *                      content:
+ *                          application/json:
+ *                              schema:
+ *                                  type: object
+ *                                  $ref: '#/components/schemas/ServerResponseFailure'
  */

@@ -83,7 +83,7 @@ class TodosController {
         try {
             const { name, description, status } = req.body;
 
-            if (!name || !description || !status) {
+            if (!name || !description) {
                 return next({
                     code: 400,
                     message: 'Please provide all task details'

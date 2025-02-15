@@ -51,11 +51,58 @@ describe('TODOS CONTROLLERS SUITE', () => {
             );
         });
 
+        it('Should validate the create todo data without status', async () => {
+            const response = await request(app).post(BASE_API_URL).send({
+                name: 'Without status task name 1',
+                description: 'Without status task description 1'
+            });
+
+            expect(response.status).toEqual(201);
+            expect(response.status).not.toEqual(400);
+            expect(response.body).toHaveProperty('success');
+            expect(response.body).not.toHaveProperty('error');
+            expect(response.body.success).toEqual(true);
+            expect(response.body.success).not.toEqual(false);
+            expect(response.body).toHaveProperty('data');
+            expect(response.body.data).toHaveProperty('newTask');
+            expect(response.body.data.newTask).toHaveProperty('_id');
+            expect(response.body.data.newTask).toHaveProperty(
+                'name',
+                'Without status task name 1'
+            );
+            expect(response.body.data.newTask).toHaveProperty(
+                'description',
+                'Without status task description 1'
+            );
+            expect(response.body.data.newTask).toHaveProperty(
+                'status',
+                ETodoStatus.PENDING
+            );
+        });
+
         it('Create a new task', async () => {
             const response = await request(app).post(BASE_API_URL).send({
                 name: 'Test task name 1',
                 description: 'Test task description 1',
                 status: ETodoStatus.PENDING
+            });
+
+            expect(response.status).toEqual(201);
+            expect(response.body.success).toEqual(true);
+            expect(response.body.data).toHaveProperty('newTask');
+
+            if (
+                response.body.data &&
+                response.body.data.newTask &&
+                response.body.data.newTask._id
+            )
+                testTodoID = response.body.data.newTask._id;
+        });
+
+        it('Create a new task with default status', async () => {
+            const response = await request(app).post(BASE_API_URL).send({
+                name: 'Test task name 1',
+                description: 'Test task description 1'
             });
 
             expect(response.status).toEqual(201);
@@ -78,7 +125,7 @@ describe('TODOS CONTROLLERS SUITE', () => {
             expect(response.status).toEqual(200);
             expect(response.body.success).toEqual(true);
             expect(response.body.data).toHaveProperty('tasks');
-            expect(response.body.data.tasks).toHaveLength(1);
+            expect(response.body.data.tasks).toHaveLength(3);
         });
     });
 
