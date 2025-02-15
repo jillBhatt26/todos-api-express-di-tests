@@ -23,7 +23,7 @@ const initExpressApp = (): Application => {
 
     // swagger
     app.use(
-        '/docs',
+        '/',
         // NOTE: Adding ts-ignore to resolve typing incompatibility between swagger and express as on 14/02/2025
         // @ts-ignore
         swaggerUi.serve,

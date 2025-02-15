@@ -15,8 +15,8 @@ const options: swaggerJSDoc.Options = {
             {
                 url:
                     NODE_ENV === 'development'
-                        ? `http://${HOST}:${PORT}`
-                        : `https://${HOST}`
+                        ? `http://${HOST}:${PORT}/api`
+                        : `https://${HOST}/api`
             }
         ]
     },
