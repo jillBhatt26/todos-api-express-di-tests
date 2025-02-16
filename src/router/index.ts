@@ -1,6 +1,7 @@
 import os from 'os';
 import { Router, Response } from 'express';
 import { TodosRouter } from '@modules/Todo';
+import { AuthRouter } from '@modules/Auth';
 
 const appRouter: Router = Router();
 
@@ -13,5 +14,6 @@ appRouter.use('/info', (_, res: Response) => {
 });
 
 appRouter.use('/todos', TodosRouter);
+appRouter.use('/auth', AuthRouter);
 
 export default appRouter;

@@ -1,4 +1,9 @@
-import { Model, MongooseError } from 'mongoose';
+import {
+    Model,
+    MongooseError,
+    ProjectionType,
+    RootFilterQuery
+} from 'mongoose';
 import { IDBModel } from '@interfaces';
 
 class DBServices<T> {
@@ -8,9 +13,13 @@ class DBServices<T> {
         this.model = this.dbModel.model;
     }
 
-    find = async (): Promise<T[]> => {
+    find = async (
+        query?: RootFilterQuery<Record<keyof T, any>>
+    ): Promise<T[]> => {
         try {
-            const data: T[] = await this.model.find({});
+            const data: T[] = await this.model.find({
+                ...query
+            });
 
             return data;
         } catch (error: unknown) {
@@ -22,9 +31,37 @@ class DBServices<T> {
         }
     };
 
-    findById = async (resourceId: string): Promise<T | null> => {
+    findOne = async (
+        query?: RootFilterQuery<Record<keyof T, any>>,
+        projection?: ProjectionType<Record<keyof T, any>> | null
+    ): Promise<T | null> => {
         try {
-            const data: T | null = await this.model.findById(resourceId);
+            const data: T | null = await this.model.findOne(
+                {
+                    ...query
+                },
+                projection
+            );
+
+            return data;
+        } catch (error: unknown) {
+            if (error instanceof MongooseError) {
+                throw new Error(error.message);
+            }
+
+            throw new Error('Failed to find the data!');
+        }
+    };
+
+    findById = async (
+        resourceId: string,
+        projection?: ProjectionType<Record<keyof T, any>> | null
+    ): Promise<T | null> => {
+        try {
+            const data: T | null = await this.model.findById(
+                resourceId,
+                projection
+            );
 
             return data;
         } catch (error: unknown) {
