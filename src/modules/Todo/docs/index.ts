@@ -230,11 +230,7 @@
  *                              schema:
  *                                  type: object
  *                                  $ref: '#/components/schemas/ServerResponseFailure'
- */
-
-/**
- * @swagger
- *      /todos:
+ *
  *          post:
  *              summary: Creates new todo
  *              tags: [Todos]
