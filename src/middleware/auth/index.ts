@@ -1,12 +1,14 @@
 import { ICustomError } from '@interfaces';
 import AuthServices from '@modules/Auth/services';
 import { NextFunction, Request, Response } from 'express';
-import { autoInjectable, container, singleton } from 'tsyringe';
+import { autoInjectable, container, inject, singleton } from 'tsyringe';
 
 @autoInjectable()
 @singleton()
 class AuthMiddleware {
-    constructor(private authServices: AuthServices) {}
+    constructor(
+        @inject(AuthServices) private readonly authServices: AuthServices
+    ) {}
 
     strict = async (req: Request, _: Response, next: NextFunction) => {
         try {

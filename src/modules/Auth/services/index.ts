@@ -6,6 +6,7 @@ import AuthModel from '../model';
 @autoInjectable()
 @singleton()
 class AuthServices extends DBServices<IAuthModel> {
+    // NOTE: DBModel isn't an instance variable and the constructor will not act as a primary constructor
     constructor(@inject('AuthModel') DBModel: AuthModel) {
         super(DBModel);
     }

@@ -26,8 +26,8 @@ class PasswordUtils {
     };
 
     verify = async (
-        inputPassword: string,
-        hashedPassword: string
+        hashedPassword: string,
+        inputPassword: string
     ): Promise<boolean> => {
         try {
             const isPasswordCorrect = await verify(

@@ -1,10 +1,9 @@
 import { Model, Schema, model } from 'mongoose';
-import { autoInjectable, container, singleton } from 'tsyringe';
+import { autoInjectable, container } from 'tsyringe';
 import { IDBModel } from '@interfaces';
 import { IAuthModel } from '../interfaces';
 
 @autoInjectable()
-@singleton()
 class AuthModel implements IDBModel<IAuthModel> {
     schema: Schema<IAuthModel> = new Schema<IAuthModel>(
         {
@@ -27,6 +26,7 @@ class AuthModel implements IDBModel<IAuthModel> {
     model: Model<IAuthModel> = model<IAuthModel>('auths', this.schema);
 }
 
+// NOTE: We need to register models as singleton as models won't be used directly as instance variables in their respective services classes
 container.registerSingleton<AuthModel>('AuthModel', AuthModel);
 
 export default AuthModel;
