@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { autoInjectable, container, singleton } from 'tsyringe';
+import { autoInjectable, container, inject, singleton } from 'tsyringe';
 import AuthServices from '../services';
 import { ICustomError } from '@interfaces';
 import PasswordUtils from '../utils/Password';
@@ -8,7 +8,7 @@ import PasswordUtils from '../utils/Password';
 @singleton()
 class AuthControllers {
     constructor(
-        private authServices: AuthServices,
+        @inject(AuthServices) private readonly authService: AuthServices,
         private passwordUtils: PasswordUtils
     ) {}
 
@@ -47,7 +47,7 @@ class AuthControllers {
         }
 
         // validate  username and email availability
-        const checkUserExists = await this.authServices.findOne(
+        const checkUserExists = await this.authService.findOne(
             {
                 $or: [{ username }, { email }]
             },
@@ -67,7 +67,7 @@ class AuthControllers {
         // create user in db
         const hashedPassword = await this.passwordUtils.hash(password);
 
-        const newUser = await this.authServices.create(
+        const newUser = await this.authService.create(
             {
                 username,
                 email,

@@ -1,5 +1,5 @@
 import { Model, Schema, model } from 'mongoose';
-import { autoInjectable, singleton } from 'tsyringe';
+import { autoInjectable, container, singleton } from 'tsyringe';
 import { IDBModel } from '@interfaces';
 import { IAuthModel } from '../interfaces';
 
@@ -26,5 +26,7 @@ class AuthModel implements IDBModel<IAuthModel> {
 
     model: Model<IAuthModel> = model<IAuthModel>('auths', this.schema);
 }
+
+container.registerSingleton<AuthModel>('AuthModel', AuthModel);
 
 export default AuthModel;
