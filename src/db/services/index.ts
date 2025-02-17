@@ -1,4 +1,5 @@
 import {
+    Document,
     Model,
     MongooseError,
     ProjectionType,
@@ -6,7 +7,7 @@ import {
 } from 'mongoose';
 import { IDBModel } from '@interfaces';
 
-class DBServices<T> {
+class DBServices<T extends Document> {
     model: Model<T>;
 
     constructor(private dbModel: IDBModel<T>) {
@@ -73,9 +74,20 @@ class DBServices<T> {
         }
     };
 
-    create = async (createResourceData: Partial<T>): Promise<T> => {
+    create = async (
+        createResourceData: Partial<T>,
+        projection?: ProjectionType<Record<keyof T, any>> | null
+    ): Promise<T> => {
         try {
-            const data: T = await this.model.create(createResourceData);
+            const createdData: T = await this.model.create(createResourceData);
+            const data: T | null = await this.model.findById(
+                createdData.id,
+                projection
+            );
+
+            if (!data) {
+                throw new Error('Failed to retrieve created data!');
+            }
 
             return data;
         } catch (error: unknown) {
@@ -86,6 +98,22 @@ class DBServices<T> {
             throw new Error('Failed to create data!');
         }
     };
+    // create = async (
+    //     createResourceData: Partial<T>,
+    //     projection?: ProjectionType<Record<keyof T, any>> | null
+    // ): Promise<T> => {
+    //     try {
+    //         const data: T = await this.model.create(createResourceData);
+
+    //         return data;
+    //     } catch (error: unknown) {
+    //         if (error instanceof MongooseError) {
+    //             throw new Error(error.message);
+    //         }
+
+    //         throw new Error('Failed to create data!');
+    //     }
+    // };
 
     insertMany = async (createResourceDataArray: Partial<T>[]) => {
         try {

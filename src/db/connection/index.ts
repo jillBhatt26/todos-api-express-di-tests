@@ -5,10 +5,14 @@ import { DB_URL } from '@config/env';
 @singleton()
 @autoInjectable()
 class Connection {
+    private conn: Mongoose | undefined;
+
     public connectMongoDB = (url?: string): Promise<Mongoose> =>
         new Promise<Mongoose>(async (resolve, reject) => {
             try {
                 const conn: Mongoose = await connect(url ?? DB_URL);
+
+                this.conn = conn;
 
                 return resolve(conn);
             } catch (error: unknown) {
@@ -42,6 +46,8 @@ class Connection {
                 return reject(`❌ Failed to disconnect MongoDB! ❌`);
             }
         });
+
+    public getConn = () => this.conn && this.conn;
 }
 
 const connection = container.resolve(Connection);

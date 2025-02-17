@@ -24,7 +24,8 @@ module.exports = {
         '^@interfaces': '<rootDir>/src/interfaces/$1',
         '^@middleware/(.*)': '<rootDir>/src/middleware/$1',
         '^@modules/(.*)': '<rootDir>/src/modules/$1',
-        '^@router': '<rootDir>/src/router/$1'
+        '^@router': '<rootDir>/src/router/$1',
+        '^@types': '<rootDir>/src/types/$1'
     },
     testSequencer: './test.sequencer.js',
     testMatch: ['**/e2e/*.test.[jt]s?(x)', '**/__tests__/*.test.[jt]s?(x)']

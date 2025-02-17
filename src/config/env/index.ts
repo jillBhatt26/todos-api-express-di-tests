@@ -6,5 +6,6 @@ const DB_URL = process.env.DB_URL ?? '';
 const TEST_DB_URL = process.env.TEST_DB_URL ?? '';
 const FE_URL = process.env.FE_URL ?? '';
 const HOST = process.env.RENDER_EXTERNAL_HOSTNAME ?? 'localhost';
+const SESSION_SECRET = process.env.SESSION_SECRET ?? 'shhhh!!!';
 
-export { NODE_ENV, HOST, PORT, DB_URL, TEST_DB_URL, FE_URL };
+export { NODE_ENV, HOST, PORT, DB_URL, TEST_DB_URL, FE_URL, SESSION_SECRET };

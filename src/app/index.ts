@@ -1,7 +1,9 @@
 import express, { Application } from 'express';
 import cors from 'cors';
+import MongoStore from 'connect-mongo';
+import session from 'express-session';
 import swaggerUi from 'swagger-ui-express';
-import { FE_URL } from '@config/env';
+import { DB_URL, FE_URL, SESSION_SECRET } from '@config/env';
 import swaggerSpecs from '@config/swagger';
 import { errorHandlerMW } from '@middleware/error';
 import appRouter from '@router';
@@ -13,6 +15,7 @@ const initExpressApp = (): Application => {
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
+    // cors
     app.use(
         cors({
             origin: [FE_URL],
@@ -21,17 +24,21 @@ const initExpressApp = (): Application => {
         })
     );
 
-    // // swagger
-    // app.use(
-    //     '/docs',
-    //     // NOTE: Adding ts-ignore to resolve typing incompatibility between swagger and express as on 14/02/2025
-    //     // @ts-ignore
-    //     swaggerUi.serve,
-    //     swaggerUi.setup(swaggerSpecs, {
-    //         customSiteTitle: 'Todos API',
-    //         customfavIcon: undefined
-    //     })
-    // );
+    // session
+    const mongoStore = MongoStore.create({
+        mongoUrl: DB_URL,
+        collectionName: 'sessions'
+    });
+
+    app.use(
+        // @ts-ignore
+        session({
+            secret: SESSION_SECRET,
+            resave: true,
+            saveUninitialized: false,
+            store: mongoStore
+        })
+    );
 
     app.use('/api', appRouter);
     app.use(errorHandlerMW);

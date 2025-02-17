@@ -67,13 +67,25 @@ class AuthControllers {
         // create user in db
         const hashedPassword = await this.passwordUtils.hash(password);
 
-        const newUser = await this.authServices.create({
-            username,
-            email,
-            password: hashedPassword
-        });
+        const newUser = await this.authServices.create(
+            {
+                username,
+                email,
+                password: hashedPassword
+            },
+            { password: 0 }
+        );
+
+        if (!newUser || !newUser.id || !newUser.username) {
+            return next({
+                code: 400,
+                message: 'Failed to create new user!'
+            } as ICustomError);
+        }
 
         // start session
+        req.session.userID = newUser.id;
+        req.session.username = newUser.username;
 
         return res.status(201).json({
             success: true,
@@ -91,8 +103,16 @@ class AuthControllers {
     };
 
     public logout = async (req: Request, res: Response, next: NextFunction) => {
-        // see if user exists
         // end session
+        req.session.destroy(error => {
+            if (error)
+                return next({
+                    code: 500,
+                    message: 'Error occurred while logging out!'
+                } as ICustomError);
+
+            return res.status(200).json({ success: true });
+        });
     };
 
     public updateUser = async (

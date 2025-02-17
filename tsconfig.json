@@ -4,6 +4,7 @@
     },
     "compilerOptions": {
         "target": "es2016",
+        "typeRoots": ["node_modules/@types", "src/types/app.d.ts"],
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "module": "commonjs",
@@ -18,7 +19,8 @@
             "@interfaces": ["interfaces"],
             "@middleware/*": ["middleware/*"],
             "@modules/*": ["modules/*"],
-            "@router": ["router"]
+            "@router": ["router"],
+            "@types": ["types"]
         },
         "outDir": "./dist",
         "esModuleInterop": true,
@@ -26,5 +28,7 @@
         "strict": true,
         "noImplicitAny": true,
         "skipLibCheck": true
-    }
+    },
+    "include": ["src/**/*"],
+    "files": ["./src/types/app.d.ts"]
 }
