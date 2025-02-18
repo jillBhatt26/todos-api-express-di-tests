@@ -141,7 +141,7 @@ class AuthControllers {
         // validate inputs
         let { username, email, password } = req.body;
 
-        if (!username || !email) {
+        if (!username && !email) {
             const error: ICustomError = {
                 code: 400,
                 message: 'Either username or email required!'
@@ -159,11 +159,11 @@ class AuthControllers {
             return next(error);
         }
 
-        username = username.trim();
-        email = email.trim();
+        if (username) username = username.trim();
+        if (email) email = email.trim();
         password = password.trim();
 
-        if (!username.length || !email.length) {
+        if ((username && !username.length) || (email && !email.length)) {
             const error: ICustomError = {
                 code: 400,
                 message: 'Username or email required without whitespaces!'
