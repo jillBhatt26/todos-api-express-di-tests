@@ -9,15 +9,20 @@ class AuthModel implements IDBModel<IAuthModel> {
         {
             username: {
                 type: String,
-                required: true
+                required: true,
+                unique: true,
+                trim: true
             },
             email: {
                 type: String,
-                required: true
+                required: true,
+                unique: true,
+                trim: true
             },
             password: {
                 type: String,
-                required: true
+                required: true,
+                trim: true
             }
         },
         { timestamps: true }
