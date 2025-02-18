@@ -16,7 +16,9 @@ class AuthMiddleware {
                 try {
                     const { userID } = req.session;
 
-                    const authUser = await this.authServices.findById(userID);
+                    const authUser = await this.authServices.findById(userID, {
+                        password: 0
+                    });
 
                     if (authUser) return next();
                 } catch (error: unknown) {
