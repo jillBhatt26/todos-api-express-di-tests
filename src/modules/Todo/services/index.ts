@@ -1,6 +1,6 @@
 // import { Model, MongooseError } from 'mongoose';
 // import { ITodo, ICreateTodoData, IUpdateTodoData } from '../interfaces';
-import { autoInjectable, singleton } from 'tsyringe';
+import { autoInjectable, inject, singleton } from 'tsyringe';
 import DBServices from '@db/services';
 import { ITodo } from '../interfaces';
 import TodosModel from '../model';
@@ -101,7 +101,7 @@ import TodosModel from '../model';
 @singleton()
 @autoInjectable()
 class TodosServices extends DBServices<ITodo> {
-    constructor(dbModel: TodosModel) {
+    constructor(@inject('TodosModel') dbModel: TodosModel) {
         super(dbModel);
     }
 }

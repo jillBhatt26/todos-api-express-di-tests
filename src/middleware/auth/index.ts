@@ -1,7 +1,7 @@
-import { ICustomError } from '@interfaces';
-import AuthServices from '@modules/Auth/services';
 import { NextFunction, Request, Response } from 'express';
 import { autoInjectable, container, inject, singleton } from 'tsyringe';
+import { ICustomError } from '@interfaces';
+import AuthServices from '@modules/Auth/services';
 
 @autoInjectable()
 @singleton()
@@ -13,11 +13,20 @@ class AuthMiddleware {
     strict = async (req: Request, _: Response, next: NextFunction) => {
         try {
             if (req.session && req.session.userID && req.session.username) {
-                const { userID } = req.session;
+                try {
+                    const { userID } = req.session;
 
-                const authUser = await this.authServices.findById(userID);
+                    const authUser = await this.authServices.findById(userID);
 
-                if (authUser) return next();
+                    if (authUser) return next();
+                } catch (error: unknown) {
+                    if (error instanceof Error) {
+                        return next({
+                            code: 500,
+                            message: 'Authentication failed!'
+                        } as ICustomError);
+                    }
+                }
             }
 
             const authRequiredError: ICustomError = {

@@ -1,11 +1,10 @@
 import { Model, Schema, model } from 'mongoose';
-import { injectable, singleton } from 'tsyringe';
+import { container, injectable, singleton } from 'tsyringe';
 import { IDBModel } from '@interfaces';
 import { ETodoStatus } from '../enums';
 import { ITodo } from '../interfaces';
 
 @singleton()
-@injectable()
 class TodosModel implements IDBModel<ITodo> {
     schema: Schema<ITodo> = new Schema<ITodo>(
         {
@@ -29,5 +28,7 @@ class TodosModel implements IDBModel<ITodo> {
 
     model: Model<ITodo> = model<ITodo>('todos', this.schema);
 }
+
+container.registerSingleton<TodosModel>('TodosModel', TodosModel);
 
 export default TodosModel;

@@ -10,7 +10,7 @@ class AuthControllers {
     // NOTE: authService is an instance variable and the below constructor will act as a primary constructor
     constructor(
         @inject(AuthServices) private readonly authService: AuthServices,
-        private passwordUtils: PasswordUtils
+        @inject(PasswordUtils) private readonly passwordUtils: PasswordUtils
     ) {}
 
     public fetchActiveUser = async (
