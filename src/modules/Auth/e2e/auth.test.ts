@@ -4,9 +4,12 @@ import type { Mongoose } from 'mongoose';
 import type TestAgent from 'supertest/lib/agent';
 import request from 'supertest';
 import initExpressApp from '@app';
+import { JEST_TIMEOUT } from '@constants';
 import connection from '@db/connection';
 import { container } from 'tsyringe';
 import AuthServices from '../services';
+
+jest.setTimeout(JEST_TIMEOUT);
 
 describe('AUTH E2E', () => {
     let app: Application;
