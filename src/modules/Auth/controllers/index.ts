@@ -26,12 +26,15 @@ class AuthControllers {
                 } as ICustomError);
             }
 
-            const user = await this.authService.findOne({
-                $and: [
-                    { username: req.session.username },
-                    { _id: req.session.userID }
-                ]
-            });
+            const user = await this.authService.findOne(
+                {
+                    $and: [
+                        { username: req.session.username },
+                        { _id: req.session.userID }
+                    ]
+                },
+                { password: 0 }
+            );
 
             if (!user)
                 return next({
@@ -49,6 +52,13 @@ class AuthControllers {
     };
 
     public signup = async (req: Request, res: Response, next: NextFunction) => {
+        if (req.session && (req.session.userID || req.session.username)) {
+            return next({
+                code: 400,
+                message: 'You are already logged in!'
+            } as ICustomError);
+        }
+
         // validate inputs
         let { username, email, password } = req.body;
 
@@ -80,7 +90,7 @@ class AuthControllers {
                 {
                     $or: [{ username }, { email }]
                 },
-                { username: 1, email: 1 }
+                { password: 0 }
             );
 
             if (checkUserExists) {
@@ -183,9 +193,12 @@ class AuthControllers {
 
         try {
             // validate  username and email availability
-            const existingUser = await this.authService.findOne({
-                $or: [{ username }, { email }]
-            });
+            const existingUser = await this.authService.findOne(
+                {
+                    $or: [{ username }, { email }]
+                },
+                { password: 0 }
+            );
 
             if (!existingUser) {
                 const error: ICustomError = {
