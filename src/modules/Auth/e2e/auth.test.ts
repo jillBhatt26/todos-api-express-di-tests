@@ -18,9 +18,6 @@ describe('AUTH E2E', () => {
     let agent: InstanceType<typeof TestAgent>;
     const BASE_API_URL: string = '/api/auth';
 
-    let testAuthID: string;
-    let nonAuthID: string = '623a0996cd97284ad4fcd9c6';
-
     beforeAll(async () => {
         conn = await connection.connectMongoDB();
 
