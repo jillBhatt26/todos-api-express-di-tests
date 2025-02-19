@@ -64,17 +64,6 @@ describe('AUTH E2E', () => {
         });
 
         it('Should check if username already exists in database', async () => {
-            // const checkSignupRes = await request(app)
-            //     .post(`${BASE_API_URL}/signup`)
-            //     .send({
-            //         username: 'user1',
-            //         email: 'user1@email.com',
-            //         password: 'password1'
-            //     });
-
-            // expect(checkSignupRes.status).toBe(201);
-            // expect(checkSignupRes.body).toHaveProperty('success', true);
-
             await authServices.create({
                 username: 'user1',
                 email: 'user1@email.com',
@@ -164,37 +153,37 @@ describe('AUTH E2E', () => {
         });
     });
 
-    describe('GET /auth', () => {
-        it('Should check if user is logged in', async () => {});
-        it('Should send logged in user info', async () => {});
-        it('Should error if no user is logged in', async () => {});
-    });
+    // describe('GET /auth', () => {
+    //     it('Should check if user is logged in', async () => {});
+    //     it('Should send logged in user info', async () => {});
+    //     it('Should error if no user is logged in', async () => {});
+    // });
 
-    describe('POST /auth/login', () => {
-        it('Should check if user is already logged in', async () => {});
-        it('Should validate login inputs', async () => {});
-        it('Should check if user exists', async () => {});
-        it('Should validate password', async () => {});
-        it('Should start a new session', async () => {});
-    });
+    // describe('POST /auth/login', () => {
+    //     it('Should check if user is already logged in', async () => {});
+    //     it('Should validate login inputs', async () => {});
+    //     it('Should check if user exists', async () => {});
+    //     it('Should validate password', async () => {});
+    //     it('Should start a new session', async () => {});
+    // });
 
-    describe('POST /auth/logout', () => {
-        it('Should check if user is logged in', async () => {});
-        it('Should destroy the session', async () => {});
-    });
+    // describe('POST /auth/logout', () => {
+    //     it('Should check if user is logged in', async () => {});
+    //     it('Should destroy the session', async () => {});
+    // });
 
-    describe('PUT /auth', () => {
-        it('Should check if user is logged in', async () => {});
-        it('Should validate user inputs', async () => {});
-        it('Should check if username and/or email are available', async () => {});
-        it('Should update the auth document', async () => {});
-    });
+    // describe('PUT /auth', () => {
+    //     it('Should check if user is logged in', async () => {});
+    //     it('Should validate user inputs', async () => {});
+    //     it('Should check if username and/or email are available', async () => {});
+    //     it('Should update the auth document', async () => {});
+    // });
 
-    describe('DELETE /auth', () => {
-        it('Should check if user is logged in', async () => {});
-        it('Should destroy the session', async () => {});
-        it('Should delete the auth document', async () => {});
-    });
+    // describe('DELETE /auth', () => {
+    //     it('Should check if user is logged in', async () => {});
+    //     it('Should destroy the session', async () => {});
+    //     it('Should delete the auth document', async () => {});
+    // });
 
     afterAll(async () => {
         await conn.connection.dropCollection('auths');
