@@ -6,15 +6,15 @@ import request from 'supertest';
 import initExpressApp from '@app';
 import { JEST_TIMEOUT } from '@constants';
 import connection from '@db/connection';
-import { container } from 'tsyringe';
-import AuthServices from '../services';
+// import { container } from 'tsyringe';
+// import AuthServices from '../services';
 
 jest.setTimeout(JEST_TIMEOUT);
 
 describe('AUTH E2E', () => {
     let app: Application;
     let conn: Mongoose;
-    let authServices = container.resolve(AuthServices);
+    // let authServices = container.resolve(AuthServices);
     let agent: InstanceType<typeof TestAgent>;
     const BASE_API_URL: string = '/api/auth';
 
@@ -26,9 +26,9 @@ describe('AUTH E2E', () => {
         agent = request.agent(app);
     });
 
-    beforeEach(async () => {
-        await authServices.deleteAll();
-    });
+    // beforeEach(async () => {
+    //     await authServices.deleteAll();
+    // });
 
     describe('POST /auth/signup', () => {
         it('Should check if all signup inputs are provided', async () => {
