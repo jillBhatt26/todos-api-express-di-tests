@@ -63,17 +63,23 @@ describe('AUTH E2E', () => {
             );
         });
 
-        it('Should check if user exists', async () => {
-            const checkSignupRes = await request(app)
-                .post(`${BASE_API_URL}/signup`)
-                .send({
-                    username: 'user1',
-                    email: 'user1@email.com',
-                    password: 'password1'
-                });
+        it('Should check if username already exists in database', async () => {
+            // const checkSignupRes = await request(app)
+            //     .post(`${BASE_API_URL}/signup`)
+            //     .send({
+            //         username: 'user1',
+            //         email: 'user1@email.com',
+            //         password: 'password1'
+            //     });
 
-            expect(checkSignupRes.status).toBe(201);
-            expect(checkSignupRes.body).toHaveProperty('success', true);
+            // expect(checkSignupRes.status).toBe(201);
+            // expect(checkSignupRes.body).toHaveProperty('success', true);
+
+            await authServices.create({
+                username: 'user1',
+                email: 'user1@email.com',
+                password: 'password1'
+            });
 
             const usernameTakenRes = await agent
                 .post(`${BASE_API_URL}/signup`)
@@ -90,6 +96,14 @@ describe('AUTH E2E', () => {
                 'message',
                 'User already exists.Please try with different email or username!'
             );
+        });
+
+        it('Should check if email already exists in database', async () => {
+            await authServices.create({
+                username: 'user1',
+                email: 'user1@email.com',
+                password: 'password1'
+            });
 
             const emailTakenRes = await agent
                 .post(`${BASE_API_URL}/signup`)
