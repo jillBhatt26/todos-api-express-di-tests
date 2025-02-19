@@ -27,9 +27,9 @@ describe('AUTH E2E', () => {
         agent = request.agent(app);
     });
 
-    beforeEach(async () => {
-        await authServices.deleteAll();
-    });
+    // beforeEach(async () => {
+    //     await authServices.deleteAll();
+    // });
 
     describe('POST /auth/signup', () => {
         it('Should check if all signup inputs are provided', async () => {
