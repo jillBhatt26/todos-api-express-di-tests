@@ -61,7 +61,10 @@ class AuthControllers {
     };
 
     public signup = async (req: Request, res: Response, next: NextFunction) => {
+        console.log('1...');
+
         if (req.session && (req.session.userID || req.session.username)) {
+            console.log('2...');
             return next({
                 code: 400,
                 message: 'You are already logged in!'
@@ -69,6 +72,7 @@ class AuthControllers {
         }
 
         // validate inputs
+        console.log('3...');
         let { username, email, password } = req.body;
 
         if (!username || !email || !password) {
