@@ -8,6 +8,7 @@ import { JEST_TIMEOUT } from '@constants';
 import connection from '@db/connection';
 import { container } from 'tsyringe';
 import AuthServices from '../services';
+import { TEST_DB_URL } from '@config/env';
 
 jest.setTimeout(JEST_TIMEOUT);
 
@@ -19,7 +20,7 @@ describe('AUTH E2E', () => {
     const BASE_API_URL: string = '/api/auth';
 
     beforeAll(async () => {
-        conn = await connection.connectMongoDB();
+        conn = await connection.connectMongoDB(TEST_DB_URL);
 
         app = initExpressApp();
 
