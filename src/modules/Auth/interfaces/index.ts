@@ -6,7 +6,8 @@ export interface IAuthModel extends Document {
     password: string;
 }
 
-export interface IAuthInfo extends Document {
+export interface IAuthInfo {
+    id: string;
     username: string;
     email: string;
 }

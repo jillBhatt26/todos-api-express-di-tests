@@ -3,12 +3,12 @@ import type { Application } from 'express';
 import type { Mongoose } from 'mongoose';
 import type TestAgent from 'supertest/lib/agent';
 import request from 'supertest';
+import { container } from 'tsyringe';
 import initExpressApp from '@app';
+import { TEST_DB_URL } from '@config/env';
 import { JEST_TIMEOUT } from '@constants';
 import connection from '@db/connection';
-import { container } from 'tsyringe';
 import AuthServices from '../services';
-import { TEST_DB_URL } from '@config/env';
 
 jest.setTimeout(JEST_TIMEOUT);
 

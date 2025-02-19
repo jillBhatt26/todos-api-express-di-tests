@@ -3,6 +3,7 @@ import { autoInjectable, container, inject, singleton } from 'tsyringe';
 import { ICustomError } from '@interfaces';
 import AuthServices from '../services';
 import PasswordUtils from '../utils/Password';
+import { IAuthInfo } from '../interfaces';
 
 @autoInjectable()
 @singleton()
@@ -36,13 +37,21 @@ class AuthControllers {
                 { password: 0 }
             );
 
-            if (!user)
+            if (!user || !user.id || !user.username || !user.email)
                 return next({
                     code: 404,
                     message: 'User not found!'
                 } as ICustomError);
 
-            return res.status(200).json({ success: true, data: { user } });
+            const foundUser: IAuthInfo = {
+                id: user.id,
+                username: user.username,
+                email: user.email
+            };
+
+            return res
+                .status(200)
+                .json({ success: true, data: { user: foundUser } });
         } catch (error: unknown) {
             return next({
                 code: 500,
@@ -122,6 +131,12 @@ class AuthControllers {
                 } as ICustomError);
             }
 
+            const signedUpUser: IAuthInfo = {
+                id: newUser.id,
+                username: newUser.username,
+                email: newUser.email
+            };
+
             // start session
             req.session.userID = newUser.id;
             req.session.username = newUser.username;
@@ -129,7 +144,7 @@ class AuthControllers {
             return res.status(201).json({
                 success: true,
                 data: {
-                    newUser
+                    newUser: signedUpUser
                 }
             });
         } catch (error: unknown) {
@@ -193,12 +208,9 @@ class AuthControllers {
 
         try {
             // validate  username and email availability
-            const existingUser = await this.authService.findOne(
-                {
-                    $or: [{ username }, { email }]
-                },
-                { password: 0 }
-            );
+            const existingUser = await this.authService.findOne({
+                $or: [{ username }, { email }]
+            });
 
             if (!existingUser) {
                 const error: ICustomError = {
@@ -226,10 +238,16 @@ class AuthControllers {
             req.session.userID = existingUser.id;
             req.session.username = existingUser.username;
 
+            const loggedInUser: IAuthInfo = {
+                id: existingUser.id,
+                username: existingUser.username,
+                email: existingUser.email
+            };
+
             return res.status(200).json({
                 success: true,
                 data: {
-                    user: existingUser
+                    user: loggedInUser
                 }
             });
         } catch (error: unknown) {
