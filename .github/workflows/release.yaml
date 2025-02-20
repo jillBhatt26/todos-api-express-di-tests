@@ -46,6 +46,7 @@ jobs:
               uses: supercharge/mongodb-github-action@1.12.0
               with:
                   mongodb-version: ${{ matrix.mongodb-version }}
+                  timeout: 600000 # 10 mins
 
             # - name: Install dependencies
             #   run: yarn install --production=false
