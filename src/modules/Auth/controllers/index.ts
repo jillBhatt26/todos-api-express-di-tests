@@ -180,7 +180,7 @@ class AuthControllers {
         if (!password) {
             const error: ICustomError = {
                 code: 400,
-                message: 'Please required!'
+                message: 'Password required!'
             };
 
             return next(error);
