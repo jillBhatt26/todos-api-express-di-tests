@@ -7,6 +7,7 @@ import { DB_URL, FE_URL, SESSION_SECRET } from '@config/env';
 import swaggerSpecs from '@config/swagger';
 import { errorHandlerMW } from '@middleware/error';
 import appRouter from '@router';
+import initAppSession from '@config/session';
 
 const initExpressApp = (): Application => {
     const app: Application = express();
@@ -26,19 +27,24 @@ const initExpressApp = (): Application => {
     );
 
     // session
-    const mongoStore = MongoStore.create({
-        mongoUrl: DB_URL,
-        collectionName: 'sessions'
-    });
+    // const mongoStore = MongoStore.create({
+    //     mongoUrl: DB_URL,
+    //     collectionName: 'sessions'
+    // });
+
+    // app.use(
+    //     // @ts-ignore
+    //     session({
+    //         secret: SESSION_SECRET,
+    //         resave: true,
+    //         saveUninitialized: false,
+    //         store: mongoStore
+    //     })
+    // );
 
     app.use(
         // @ts-ignore
-        session({
-            secret: SESSION_SECRET,
-            resave: true,
-            saveUninitialized: false,
-            store: mongoStore
-        })
+        initAppSession()
     );
 
     app.use('/api', appRouter);

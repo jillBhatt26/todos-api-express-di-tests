@@ -40,10 +40,10 @@ describe('AUTH E2E', () => {
                 });
             expect(newUserRes.status).toEqual(201);
 
-            // expect(newUserRes.header['set-cookie']).toBeDefined();
-            // expect(newUserRes.header['set-cookie'][0]).toContain('connect.sid');
+            expect(newUserRes.header['set-cookie']).toBeDefined();
+            expect(newUserRes.header['set-cookie'][0]).toContain('connect.sid');
 
-            expect(newUserRes.header['set-cookie']).toBeUndefined();
+            // expect(newUserRes.header['set-cookie']).toBeUndefined();
 
             expect(newUserRes.body).toHaveProperty('success', true);
             expect(newUserRes.body).toHaveProperty('data');
