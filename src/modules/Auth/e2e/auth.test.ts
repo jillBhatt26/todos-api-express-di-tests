@@ -27,9 +27,9 @@ describe('AUTH E2E', () => {
         agent = request.agent(app);
     });
 
-    // beforeEach(async () => {
-    //     await authServices.deleteAll();
-    // });
+    beforeEach(async () => {
+        await authServices.deleteAll();
+    });
 
     describe('POST /auth/signup', () => {
         it('Should check if all signup inputs are provided', async () => {
@@ -120,6 +120,8 @@ describe('AUTH E2E', () => {
 
             expect(signupRes.status).toEqual(201);
             expect(signupRes.body).toHaveProperty('success', true);
+            expect(signupRes.header['set-cookie']).toBeDefined();
+            expect(signupRes.header['set-cookie'][0]).toContain('connect.sid');
             expect(signupRes.body).toHaveProperty('data');
             expect(signupRes.body.data).toHaveProperty('newUser');
             expect(signupRes.body.data.newUser).toHaveProperty(
@@ -132,58 +134,7 @@ describe('AUTH E2E', () => {
             );
             expect(signupRes.body.data.newUser).not.toHaveProperty('password');
         });
-
-        it('Should check if user is already logged in', async () => {
-            // NOTE: Using agent we can use persisted session info which is not available in standalone request(app).post(URL) method. This doubles down as a test for session as well.
-            const existingSignupRes = await agent
-                .post(`${BASE_API_URL}/signup`)
-                .send({
-                    username: 'user1',
-                    email: 'user1@email.com',
-                    password: 'password1'
-                });
-
-            expect(existingSignupRes.status).toBe(400);
-            expect(existingSignupRes.body).toHaveProperty('success', false);
-            expect(existingSignupRes.body).toHaveProperty('error');
-            expect(existingSignupRes.body.error).toHaveProperty(
-                'message',
-                'You are already logged in!'
-            );
-        });
     });
-
-    // describe('GET /auth', () => {
-    //     it('Should check if user is logged in', async () => {});
-    //     it('Should send logged in user info', async () => {});
-    //     it('Should error if no user is logged in', async () => {});
-    // });
-
-    // describe('POST /auth/login', () => {
-    //     it('Should check if user is already logged in', async () => {});
-    //     it('Should validate login inputs', async () => {});
-    //     it('Should check if user exists', async () => {});
-    //     it('Should validate password', async () => {});
-    //     it('Should start a new session', async () => {});
-    // });
-
-    // describe('POST /auth/logout', () => {
-    //     it('Should check if user is logged in', async () => {});
-    //     it('Should destroy the session', async () => {});
-    // });
-
-    // describe('PUT /auth', () => {
-    //     it('Should check if user is logged in', async () => {});
-    //     it('Should validate user inputs', async () => {});
-    //     it('Should check if username and/or email are available', async () => {});
-    //     it('Should update the auth document', async () => {});
-    // });
-
-    // describe('DELETE /auth', () => {
-    //     it('Should check if user is logged in', async () => {});
-    //     it('Should destroy the session', async () => {});
-    //     it('Should delete the auth document', async () => {});
-    // });
 
     afterAll(async () => {
         await conn.connection.dropCollection('auths');

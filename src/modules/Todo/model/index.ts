@@ -1,10 +1,10 @@
 import { Model, Schema, model } from 'mongoose';
-import { container, injectable, singleton } from 'tsyringe';
+import { autoInjectable, container } from 'tsyringe';
 import { IDBModel } from '@interfaces';
 import { ETodoStatus } from '../enums';
 import { ITodo } from '../interfaces';
 
-@singleton()
+@autoInjectable()
 class TodosModel implements IDBModel<ITodo> {
     schema: Schema<ITodo> = new Schema<ITodo>(
         {
