@@ -60,14 +60,17 @@ describe('AUTH E2E', () => {
         // });
 
         it('Should sign up a new user', async () => {
-            await authServices.create({
-                username: 'user1',
-                email: 'user1@email.com',
-                password: 'password1'
-            });
+            const newUserRes = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .send({
+                    username: 'user1',
+                    email: 'user1@email.com',
+                    password: 'password1'
+                });
 
-            expect(true).toBe(true);
-            expect(200 + 1).toEqual(201);
+            expect(newUserRes.status).toEqual(201);
+
+            expect(newUserRes.body).toHaveProperty('success', true);
         });
     });
 
