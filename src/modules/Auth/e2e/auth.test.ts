@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import type { Application } from 'express';
 import type { Mongoose } from 'mongoose';
+import type TestAgent from 'supertest/lib/agent';
 import request from 'supertest';
 import { container } from 'tsyringe';
 import initExpressApp from '@app';
@@ -15,6 +16,7 @@ describe('AUTH E2E', () => {
     let app: Application;
     let conn: Mongoose;
     let authServices = container.resolve(AuthServices);
+    let agent: InstanceType<typeof TestAgent>;
     const BASE_API_URL: string = '/api/auth';
 
     beforeAll(async () => {
@@ -23,6 +25,8 @@ describe('AUTH E2E', () => {
         app = initExpressApp();
 
         await authServices.deleteAll();
+
+        agent = request.agent(app);
     });
 
     afterEach(async () => {
@@ -31,13 +35,11 @@ describe('AUTH E2E', () => {
 
     describe('POST /auth/signup', () => {
         it('Should sign up a new user', async () => {
-            const newUserRes = await request(app)
-                .post(`${BASE_API_URL}/signup`)
-                .send({
-                    username: 'user1',
-                    email: 'user1@email.com',
-                    password: 'password1'
-                });
+            const newUserRes = await agent.post(`${BASE_API_URL}/signup`).send({
+                username: 'user1',
+                email: 'user1@email.com',
+                password: 'password1'
+            });
             expect(newUserRes.status).toEqual(201);
 
             expect(newUserRes.header['set-cookie']).toBeDefined();
