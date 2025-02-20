@@ -61,13 +61,6 @@ class AuthControllers {
     };
 
     public signup = async (req: Request, res: Response, next: NextFunction) => {
-        if (req.session && (req.session.userID || req.session.username)) {
-            return next({
-                code: 400,
-                message: 'You are already logged in!'
-            } as ICustomError);
-        }
-
         // validate inputs
 
         let { username, email, password } = req.body;
@@ -139,10 +132,6 @@ class AuthControllers {
                 email: newUser.email
             };
 
-            // start session
-            req.session.userID = newUser.id;
-            req.session.username = newUser.username;
-
             return res.status(201).json({
                 success: true,
                 data: {
@@ -158,6 +147,15 @@ class AuthControllers {
     };
 
     // public signup = async (req: Request, res: Response, next: NextFunction) => {
+    //     if (req.session && (req.session.userID || req.session.username)) {
+    //         return next({
+    //             code: 400,
+    //             message: 'You are already logged in!'
+    //         } as ICustomError);
+    //     }
+
+    //     // validate inputs
+
     //     let { username, email, password } = req.body;
 
     //     if (!username || !email || !password) {
@@ -203,14 +201,12 @@ class AuthControllers {
 
     //         // create user in db
 
-    //         const hashedPassword = await this.passwordUtils.hash(
-    //             req.body.password
-    //         );
+    //         const hashedPassword = await this.passwordUtils.hash(password);
 
     //         const newUser = await this.authService.create(
     //             {
-    //                 username: req.body.username,
-    //                 email: req.body.email,
+    //                 username,
+    //                 email,
     //                 password: hashedPassword
     //             },
     //             { password: 0 }
@@ -230,8 +226,8 @@ class AuthControllers {
     //         };
 
     //         // start session
-    //         // req.session.userID = newUser.id;
-    //         // req.session.username = newUser.username;
+    //         req.session.userID = newUser.id;
+    //         req.session.username = newUser.username;
 
     //         return res.status(201).json({
     //             success: true,
