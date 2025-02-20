@@ -1,10 +1,4 @@
-import {
-    connect,
-    ConnectOptions,
-    disconnect,
-    Mongoose,
-    MongooseError
-} from 'mongoose';
+import { connect, disconnect, Mongoose, MongooseError } from 'mongoose';
 import { autoInjectable, container, singleton } from 'tsyringe';
 import { DB_URL } from '@config/env';
 
@@ -16,14 +10,7 @@ class Connection {
     public connectMongoDB = (url?: string): Promise<Mongoose> =>
         new Promise<Mongoose>(async (resolve, reject) => {
             try {
-                const mongooseConnectionOptions: ConnectOptions = {
-                    serverSelectionTimeoutMS: 600000 // 10 mins
-                };
-
-                const conn: Mongoose = await connect(
-                    url ?? DB_URL,
-                    mongooseConnectionOptions
-                );
+                const conn: Mongoose = await connect(url ?? DB_URL);
 
                 this.conn = conn;
 
