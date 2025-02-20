@@ -42,9 +42,6 @@ jobs:
                   node-version: ${{ matrix.node-version }}
                   cache: 'yarn'
 
-            - name: Set Node.js options
-              run: echo "NODE_OPTIONS=--tls-min-v1.0" >> $GITHUB_ENV
-
             - name: Start MongoDB
               uses: supercharge/mongodb-github-action@1.14.0
               with:
