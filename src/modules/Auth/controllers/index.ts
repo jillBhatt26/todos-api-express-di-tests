@@ -139,6 +139,10 @@ class AuthControllers {
                 email: newUser.email
             };
 
+            // start session
+            req.session.userID = newUser.id;
+            req.session.username = newUser.username;
+
             return res.status(201).json({
                 success: true,
                 data: {
@@ -152,103 +156,6 @@ class AuthControllers {
             } as ICustomError);
         }
     };
-
-    // public signup = async (req: Request, res: Response, next: NextFunction) => {
-    //     if (req.session && (req.session.userID || req.session.username)) {
-    //         return next({
-    //             code: 400,
-    //             message: 'You are already logged in!'
-    //         } as ICustomError);
-    //     }
-
-    //     // validate inputs
-
-    //     let { username, email, password } = req.body;
-
-    //     if (!username || !email || !password) {
-    //         const error: ICustomError = {
-    //             code: 400,
-    //             message: 'Please provide all user details!'
-    //         };
-
-    //         return next(error);
-    //     }
-
-    //     username = username.trim();
-    //     email = email.trim();
-    //     password = password.trim();
-
-    //     if (!username.length || !email.length || !password.length) {
-    //         const error: ICustomError = {
-    //             code: 400,
-    //             message: 'Empty user details provided!'
-    //         };
-
-    //         return next(error);
-    //     }
-
-    //     try {
-    //         // validate  username and email availability
-    //         const checkUserExists = await this.authService.findOne(
-    //             {
-    //                 $or: [{ username }, { email }]
-    //             },
-    //             { password: 0 }
-    //         );
-
-    //         if (checkUserExists) {
-    //             const error: ICustomError = {
-    //                 code: 400,
-    //                 message:
-    //                     'User already exists.Please try with different email or username!'
-    //             };
-
-    //             return next(error);
-    //         }
-
-    //         // create user in db
-
-    //         const hashedPassword = await this.passwordUtils.hash(password);
-
-    //         const newUser = await this.authService.create(
-    //             {
-    //                 username,
-    //                 email,
-    //                 password: hashedPassword
-    //             },
-    //             { password: 0 }
-    //         );
-
-    //         if (!newUser || !newUser.id || !newUser.username) {
-    //             return next({
-    //                 code: 400,
-    //                 message: 'Failed to create new user!'
-    //             } as ICustomError);
-    //         }
-
-    //         const signedUpUser: IAuthInfo = {
-    //             id: newUser.id,
-    //             username: newUser.username,
-    //             email: newUser.email
-    //         };
-
-    //         // start session
-    //         req.session.userID = newUser.id;
-    //         req.session.username = newUser.username;
-
-    //         return res.status(201).json({
-    //             success: true,
-    //             data: {
-    //                 newUser: signedUpUser
-    //             }
-    //         });
-    //     } catch (error: unknown) {
-    //         return next({
-    //             code: 500,
-    //             message: 'User signup failed!'
-    //         } as ICustomError);
-    //     }
-    // };
 
     public login = async (req: Request, res: Response, next: NextFunction) => {
         if (req.session && (req.session.userID || req.session.username)) {

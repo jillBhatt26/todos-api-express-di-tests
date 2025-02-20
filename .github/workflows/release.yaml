@@ -35,6 +35,7 @@ jobs:
                   echo DB_URL = ${{ secrets.DB_URL }} >> .env
                   echo TEST_DB_URL = ${{ secrets.TEST_DB_URL }} >> .env
                   echo FE_URL = ${{ secrets.FE_URL }} >> .env
+                  echo SESSION_SECRET = ${{ secrets.SESSION_SECRET }} >> .env
 
             - name: Use Node.js ${{ matrix.node-version }}
               uses: actions/setup-node@v4
