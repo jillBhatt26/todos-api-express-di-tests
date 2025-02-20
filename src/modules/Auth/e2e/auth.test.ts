@@ -34,32 +34,104 @@ describe('AUTH E2E', () => {
     });
 
     describe('POST /auth/signup', () => {
+        it('Should validate signup inputs', async () => {
+            const response = await agent.post(`${BASE_API_URL}/signup`).send({
+                username: '',
+                email: ''
+            });
+
+            expect(response.status).toEqual(400);
+
+            expect(response.body).toHaveProperty('success', false);
+            expect(response.body).toHaveProperty('error');
+            expect(response.body.error).toHaveProperty('message');
+            expect(response.body.error.message).toEqual(
+                'Please provide all user details!'
+            );
+        });
+
+        it('Should validate signup inputs', async () => {
+            const response = await agent.post(`${BASE_API_URL}/signup`).send({
+                username: '',
+                email: '',
+                password: ''
+            });
+
+            expect(response.status).toEqual(400);
+
+            expect(response.body).toHaveProperty('success', false);
+            expect(response.body).toHaveProperty('error');
+            expect(response.body.error).toHaveProperty('message');
+            expect(response.body.error.message).toEqual(
+                'Please provide all user details!'
+            );
+        });
+
+        it('Should check if username or email is taken', async () => {
+            await authServices.create({
+                username: 'user1',
+                email: 'user1@email.com',
+                password: 'password@1'
+            });
+
+            const response = await agent.post(`${BASE_API_URL}/signup`).send({
+                username: 'user1',
+                email: 'user1@email.com',
+                password: 'password@1'
+            });
+
+            expect(response.status).toEqual(400);
+
+            expect(response.body).toHaveProperty('success', false);
+            expect(response.body).toHaveProperty('error');
+            expect(response.body.error).toHaveProperty('message');
+            expect(response.body.error.message).toEqual(
+                'User already exists.Please try with different email or username!'
+            );
+        });
+
         it('Should sign up a new user', async () => {
-            const newUserRes = await agent.post(`${BASE_API_URL}/signup`).send({
+            const response = await agent.post(`${BASE_API_URL}/signup`).send({
                 username: 'user1',
                 email: 'user1@email.com',
                 password: 'password1'
             });
-            expect(newUserRes.status).toEqual(201);
+            expect(response.status).toEqual(201);
 
-            expect(newUserRes.header['set-cookie']).toBeDefined();
-            expect(newUserRes.header['set-cookie'][0]).toContain('connect.sid');
+            expect(response.header['set-cookie']).toBeDefined();
+            expect(response.header['set-cookie'][0]).toContain('connect.sid');
 
             // expect(newUserRes.header['set-cookie']).toBeUndefined();
 
-            expect(newUserRes.body).toHaveProperty('success', true);
-            expect(newUserRes.body).toHaveProperty('data');
-            expect(newUserRes.body.data).toHaveProperty('newUser');
-            expect(newUserRes.body.data.newUser).toHaveProperty('id');
-            expect(newUserRes.body.data.newUser).toHaveProperty(
+            expect(response.body).toHaveProperty('success', true);
+            expect(response.body).toHaveProperty('data');
+            expect(response.body.data).toHaveProperty('newUser');
+            expect(response.body.data.newUser).toHaveProperty('id');
+            expect(response.body.data.newUser).toHaveProperty(
                 'username',
                 'user1'
             );
-            expect(newUserRes.body.data.newUser).toHaveProperty(
+            expect(response.body.data.newUser).toHaveProperty(
                 'email',
                 'user1@email.com'
             );
-            expect(newUserRes.body.data.newUser).not.toHaveProperty('password');
+            expect(response.body.data.newUser).not.toHaveProperty('password');
+        });
+
+        it('Should check if user is already logged in', async () => {
+            const response = await agent.post(`${BASE_API_URL}/signup`).send({
+                username: 'user1',
+                email: 'user1@email.com',
+                password: 'password1'
+            });
+
+            expect(response.status).toEqual(400);
+            expect(response.body).toHaveProperty('success', false);
+            expect(response.body).toHaveProperty('error');
+            expect(response.body.error).toHaveProperty('message');
+            expect(response.body.error.message).toEqual(
+                'You are already logged in!'
+            );
         });
     });
 
