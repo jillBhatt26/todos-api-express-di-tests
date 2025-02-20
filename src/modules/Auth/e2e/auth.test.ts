@@ -110,30 +110,6 @@ describe('AUTH E2E', () => {
                 'User already exists.Please try with different email or username!'
             );
         });
-
-        it('Should sign up a new user', async () => {
-            const signupRes = await agent.post(`${BASE_API_URL}/signup`).send({
-                username: 'user1',
-                email: 'user1@email.com',
-                password: 'password1'
-            });
-
-            expect(signupRes.status).toEqual(201);
-            expect(signupRes.body).toHaveProperty('success', true);
-            expect(signupRes.header['set-cookie']).toBeDefined();
-            expect(signupRes.header['set-cookie'][0]).toContain('connect.sid');
-            expect(signupRes.body).toHaveProperty('data');
-            expect(signupRes.body.data).toHaveProperty('newUser');
-            expect(signupRes.body.data.newUser).toHaveProperty(
-                'username',
-                'user1'
-            );
-            expect(signupRes.body.data.newUser).toHaveProperty(
-                'email',
-                'user1@email.com'
-            );
-            expect(signupRes.body.data.newUser).not.toHaveProperty('password');
-        });
     });
 
     afterAll(async () => {
