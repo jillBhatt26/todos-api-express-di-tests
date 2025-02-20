@@ -140,8 +140,8 @@ class AuthControllers {
             };
 
             // start session
-            req.session.userID = newUser.id;
-            req.session.username = newUser.username;
+            // req.session.userID = newUser.id;
+            // req.session.username = newUser.username;
 
             return res.status(201).json({
                 success: true,
