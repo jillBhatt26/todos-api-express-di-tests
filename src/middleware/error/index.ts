@@ -7,6 +7,8 @@ const errorHandlerMW = async (
     res: Response,
     __: NextFunction
 ) => {
+    console.log('error: ', error);
+
     return res.status(error.code).json({
         success: false,
         error
