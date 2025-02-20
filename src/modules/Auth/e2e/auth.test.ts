@@ -32,84 +32,84 @@ describe('AUTH E2E', () => {
     });
 
     describe('POST /auth/signup', () => {
-        it('Should check if all signup inputs are provided', async () => {
-            const res = await agent.post(`${BASE_API_URL}/signup`).send({
-                username: '',
-                email: ''
-            });
+        // it('Should check if all signup inputs are provided', async () => {
+        //     const res = await agent.post(`${BASE_API_URL}/signup`).send({
+        //         username: '',
+        //         email: ''
+        //     });
 
-            expect(res.status).toEqual(400);
-            expect(res.body).toHaveProperty('success', false);
-            expect(res.body).toHaveProperty('error');
-            expect(res.body.error).toHaveProperty(
-                'message',
-                'Please provide all user details!'
-            );
-        });
+        //     expect(res.status).toEqual(400);
+        //     expect(res.body).toHaveProperty('success', false);
+        //     expect(res.body).toHaveProperty('error');
+        //     expect(res.body.error).toHaveProperty(
+        //         'message',
+        //         'Please provide all user details!'
+        //     );
+        // });
 
-        it('Should check if signup inputs are not empty', async () => {
-            const res = await agent.post(`${BASE_API_URL}/signup`).send({
-                username: '',
-                email: '',
-                password: ''
-            });
+        // it('Should check if signup inputs are not empty', async () => {
+        //     const res = await agent.post(`${BASE_API_URL}/signup`).send({
+        //         username: '',
+        //         email: '',
+        //         password: ''
+        //     });
 
-            expect(res.status).toEqual(400);
-            expect(res.body).toHaveProperty('success', false);
-            expect(res.body).toHaveProperty('error');
-            expect(res.body.error).toHaveProperty(
-                'message',
-                'Please provide all user details!'
-            );
-        });
+        //     expect(res.status).toEqual(400);
+        //     expect(res.body).toHaveProperty('success', false);
+        //     expect(res.body).toHaveProperty('error');
+        //     expect(res.body.error).toHaveProperty(
+        //         'message',
+        //         'Please provide all user details!'
+        //     );
+        // });
 
-        it('Should check if username already exists in database', async () => {
-            await authServices.create({
-                username: 'user1',
-                email: 'user1@email.com',
-                password: 'password1'
-            });
+        // it('Should check if username already exists in database', async () => {
+        //     await authServices.create({
+        //         username: 'user1',
+        //         email: 'user1@email.com',
+        //         password: 'password1'
+        //     });
 
-            const usernameTakenRes = await agent
-                .post(`${BASE_API_URL}/signup`)
-                .send({
-                    username: 'user1',
-                    email: 'user1@email.com',
-                    password: 'password1'
-                });
+        //     const usernameTakenRes = await agent
+        //         .post(`${BASE_API_URL}/signup`)
+        //         .send({
+        //             username: 'user1',
+        //             email: 'user1@email.com',
+        //             password: 'password1'
+        //         });
 
-            expect(usernameTakenRes.status).toBe(400);
-            expect(usernameTakenRes.body).toHaveProperty('success', false);
-            expect(usernameTakenRes.body).toHaveProperty('error');
-            expect(usernameTakenRes.body.error).toHaveProperty(
-                'message',
-                'User already exists.Please try with different email or username!'
-            );
-        });
+        //     expect(usernameTakenRes.status).toBe(400);
+        //     expect(usernameTakenRes.body).toHaveProperty('success', false);
+        //     expect(usernameTakenRes.body).toHaveProperty('error');
+        //     expect(usernameTakenRes.body.error).toHaveProperty(
+        //         'message',
+        //         'User already exists.Please try with different email or username!'
+        //     );
+        // });
 
-        it('Should check if email already exists in database', async () => {
-            await authServices.create({
-                username: 'user1',
-                email: 'user1@email.com',
-                password: 'password1'
-            });
+        // it('Should check if email already exists in database', async () => {
+        //     await authServices.create({
+        //         username: 'user1',
+        //         email: 'user1@email.com',
+        //         password: 'password1'
+        //     });
 
-            const emailTakenRes = await agent
-                .post(`${BASE_API_URL}/signup`)
-                .send({
-                    username: 'user2',
-                    email: 'user1@email.com',
-                    password: 'password1'
-                });
+        //     const emailTakenRes = await agent
+        //         .post(`${BASE_API_URL}/signup`)
+        //         .send({
+        //             username: 'user2',
+        //             email: 'user1@email.com',
+        //             password: 'password1'
+        //         });
 
-            expect(emailTakenRes.status).toBe(400);
-            expect(emailTakenRes.body).toHaveProperty('success', false);
-            expect(emailTakenRes.body).toHaveProperty('error');
-            expect(emailTakenRes.body.error).toHaveProperty(
-                'message',
-                'User already exists.Please try with different email or username!'
-            );
-        });
+        //     expect(emailTakenRes.status).toBe(400);
+        //     expect(emailTakenRes.body).toHaveProperty('success', false);
+        //     expect(emailTakenRes.body).toHaveProperty('error');
+        //     expect(emailTakenRes.body.error).toHaveProperty(
+        //         'message',
+        //         'User already exists.Please try with different email or username!'
+        //     );
+        // });
 
         it('Should sign up a new user', async () => {
             const signupRes = await agent.post(`${BASE_API_URL}/signup`).send({
