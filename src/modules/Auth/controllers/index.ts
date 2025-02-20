@@ -61,12 +61,12 @@ class AuthControllers {
     };
 
     public signup = async (req: Request, res: Response, next: NextFunction) => {
-        // if (req.session && (req.session.userID || req.session.username)) {
-        //     return next({
-        //         code: 400,
-        //         message: 'You are already logged in!'
-        //     } as ICustomError);
-        // }
+        if (req.session && (req.session.userID || req.session.username)) {
+            return next({
+                code: 400,
+                message: 'You are already logged in!'
+            } as ICustomError);
+        }
 
         // validate inputs
         let { username, email, password } = req.body;
