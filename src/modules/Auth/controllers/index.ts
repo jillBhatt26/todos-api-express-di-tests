@@ -61,10 +61,7 @@ class AuthControllers {
     };
 
     public signup = async (req: Request, res: Response, next: NextFunction) => {
-        console.log('1...');
-
         if (req.session && (req.session.userID || req.session.username)) {
-            console.log('2...');
             return next({
                 code: 400,
                 message: 'You are already logged in!'
@@ -72,12 +69,10 @@ class AuthControllers {
         }
 
         // validate inputs
-        console.log('3...');
+
         let { username, email, password } = req.body;
 
-        console.log('4...');
         if (!username || !email || !password) {
-            console.log('5...');
             const error: ICustomError = {
                 code: 400,
                 message: 'Please provide all user details!'
@@ -86,14 +81,11 @@ class AuthControllers {
             return next(error);
         }
 
-        console.log('6...');
         username = username.trim();
         email = email.trim();
         password = password.trim();
 
-        console.log('7...');
         if (!username.length || !email.length || !password.length) {
-            console.log('8...');
             const error: ICustomError = {
                 code: 400,
                 message: 'Empty user details provided!'
@@ -103,7 +95,6 @@ class AuthControllers {
         }
 
         try {
-            console.log('9...');
             // validate  username and email availability
             const checkUserExists = await this.authService.findOne(
                 {
@@ -112,9 +103,7 @@ class AuthControllers {
                 { password: 0 }
             );
 
-            console.log('10...');
             if (checkUserExists) {
-                console.log('11...');
                 const error: ICustomError = {
                     code: 400,
                     message:
@@ -125,10 +114,9 @@ class AuthControllers {
             }
 
             // create user in db
-            console.log('12...');
+
             const hashedPassword = await this.passwordUtils.hash(password);
 
-            console.log('13...');
             const newUser = await this.authService.create(
                 {
                     username,
@@ -139,26 +127,22 @@ class AuthControllers {
             );
 
             if (!newUser || !newUser.id || !newUser.username) {
-                console.log('14...');
                 return next({
                     code: 400,
                     message: 'Failed to create new user!'
                 } as ICustomError);
             }
 
-            console.log('15...');
             const signedUpUser: IAuthInfo = {
                 id: newUser.id,
                 username: newUser.username,
                 email: newUser.email
             };
 
-            console.log('16...');
             // start session
             req.session.userID = newUser.id;
             req.session.username = newUser.username;
 
-            console.log('17...');
             return res.status(201).json({
                 success: true,
                 data: {
@@ -166,7 +150,6 @@ class AuthControllers {
                 }
             });
         } catch (error: unknown) {
-            console.log('18...');
             return next({
                 code: 500,
                 message: 'User signup failed!'
