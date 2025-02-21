@@ -311,6 +311,143 @@ describe('AUTH E2E', () => {
         });
     });
 
+    describe('POST /auth/logout', () => {
+        it('Should check if auth user is logging out', async () => {
+            const signupRes = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .send({
+                    username: 'user1',
+                    email: 'user1@email.com',
+                    password: 'password1'
+                });
+
+            expect(signupRes.statusCode).toEqual(201);
+            expect(signupRes.body).toHaveProperty('success', true);
+
+            expect(signupRes.header['set-cookie']).toBeDefined();
+            expect(signupRes.header['set-cookie']).toEqual(
+                expect.arrayContaining([expect.any(String)])
+            );
+            expect(signupRes.header['set-cookie'][0]).toContain('connect.sid');
+
+            const logoutRes = await request(app).post(`${BASE_API_URL}/logout`);
+
+            expect(logoutRes.statusCode).toEqual(401);
+            expect(logoutRes.body).toHaveProperty('success', false);
+            expect(logoutRes.body).toHaveProperty('error');
+            expect(logoutRes.body.error).toHaveProperty(
+                'message',
+                'You will have to log in first!'
+            );
+        });
+
+        it('Should log the user out', async () => {
+            const signupRes = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .send({
+                    username: 'user1',
+                    email: 'user1@email.com',
+                    password: 'password1'
+                });
+
+            expect(signupRes.statusCode).toEqual(201);
+            expect(signupRes.body).toHaveProperty('success', true);
+
+            expect(signupRes.header['set-cookie']).toBeDefined();
+            expect(signupRes.header['set-cookie']).toEqual(
+                expect.arrayContaining([expect.any(String)])
+            );
+            expect(signupRes.header['set-cookie'][0]).toContain('connect.sid');
+
+            const logoutRes = await request(app)
+                .post(`${BASE_API_URL}/logout`)
+                .set('Cookie', signupRes.header['set-cookie']);
+
+            expect(logoutRes.statusCode).toEqual(200);
+            expect(logoutRes.body).toHaveProperty('success', true);
+        });
+    });
+
+    describe('GET /auth', () => {
+        it('Should ask to login first if no active user is found', async () => {
+            const signupRes = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .send({
+                    username: 'user1',
+                    email: 'user1@email.com',
+                    password: 'password1'
+                });
+
+            expect(signupRes.status).toEqual(201);
+
+            expect(signupRes.header['set-cookie']).toBeDefined();
+            expect(signupRes.header['set-cookie'][0]).toContain('connect.sid');
+
+            const fetchUserRes = await request(app)
+                .get(BASE_API_URL)
+                .set('Cookie', signupRes.headers['set-cookie']);
+
+            expect(fetchUserRes.status).toEqual(200);
+            expect(fetchUserRes.body).toHaveProperty('success', true);
+        });
+
+        it('Should fetch the logged in user', async () => {});
+    });
+
+    describe('DELETE /auth', () => {
+        it('Should check if user is authenticated to delete', async () => {
+            const signupRes = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .send({
+                    username: 'user1',
+                    email: 'user1@email.com',
+                    password: 'password'
+                });
+
+            expect(signupRes.status).toEqual(201);
+            expect(signupRes.body).toHaveProperty('success', true);
+
+            expect(signupRes.header['set-cookie']).toBeDefined();
+            expect(signupRes.header['set-cookie'][0]).toContain('connect.sid');
+
+            const deleteRes = await request(app).delete(BASE_API_URL);
+
+            expect(deleteRes.status).toEqual(401);
+            expect(deleteRes.body).toHaveProperty('success', false);
+
+            expect(deleteRes.statusCode).toEqual(401);
+            expect(deleteRes.body).toHaveProperty('success', false);
+            expect(deleteRes.body).toHaveProperty('error');
+            expect(deleteRes.body.error).toHaveProperty(
+                'message',
+                'You will have to log in first!'
+            );
+        });
+
+        it('Should delete user account', async () => {
+            const signupRes = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .send({
+                    username: 'user1',
+                    email: 'user1@email.com',
+                    password: 'password'
+                });
+
+            expect(signupRes.status).toEqual(201);
+            expect(signupRes.body).toHaveProperty('success', true);
+
+            expect(signupRes.header['set-cookie']).toBeDefined();
+            expect(signupRes.header['set-cookie'][0]).toContain('connect.sid');
+
+            const deleteRes = await request(app)
+                .delete(BASE_API_URL)
+                .set('Cookie', signupRes.headers['set-cookie']);
+
+            expect(deleteRes.status).toEqual(200);
+            expect(deleteRes.body).toHaveProperty('success', true);
+        });
+    });
+
     afterAll(async () => {
         await conn.connection.dropCollection('auths');
         await conn.connection.dropDatabase();
