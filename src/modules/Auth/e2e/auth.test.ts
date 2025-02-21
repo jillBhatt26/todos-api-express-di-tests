@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import type { Application } from 'express';
 import type { Mongoose } from 'mongoose';
-import type TestAgent from 'supertest/lib/agent';
 import request from 'supertest';
 import { container } from 'tsyringe';
 import initExpressApp from '@app';
@@ -16,7 +15,6 @@ describe('AUTH E2E', () => {
     let app: Application;
     let conn: Mongoose;
     let authServices = container.resolve(AuthServices);
-    let agent: InstanceType<typeof TestAgent>;
     const BASE_API_URL: string = '/api/auth';
 
     beforeAll(async () => {
@@ -25,8 +23,6 @@ describe('AUTH E2E', () => {
         app = initExpressApp();
 
         await authServices.deleteAll();
-
-        agent = request.agent(app);
     });
 
     afterEach(async () => {
@@ -35,10 +31,12 @@ describe('AUTH E2E', () => {
 
     describe('POST /auth/signup', () => {
         it('Should validate signup inputs', async () => {
-            const response = await agent.post(`${BASE_API_URL}/signup`).send({
-                username: '',
-                email: ''
-            });
+            const response = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .send({
+                    username: '',
+                    email: ''
+                });
 
             expect(response.status).toEqual(400);
 
@@ -51,11 +49,13 @@ describe('AUTH E2E', () => {
         });
 
         it('Should validate signup inputs', async () => {
-            const response = await agent.post(`${BASE_API_URL}/signup`).send({
-                username: '',
-                email: '',
-                password: ''
-            });
+            const response = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .send({
+                    username: '',
+                    email: '',
+                    password: ''
+                });
 
             expect(response.status).toEqual(400);
 
@@ -74,11 +74,13 @@ describe('AUTH E2E', () => {
                 password: 'password@1'
             });
 
-            const response = await agent.post(`${BASE_API_URL}/signup`).send({
-                username: 'user1',
-                email: 'user1@email.com',
-                password: 'password@1'
-            });
+            const response = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .send({
+                    username: 'user1',
+                    email: 'user1@email.com',
+                    password: 'password@1'
+                });
 
             expect(response.status).toEqual(400);
 
@@ -91,11 +93,13 @@ describe('AUTH E2E', () => {
         });
 
         it('Should sign up a new user', async () => {
-            const response = await agent.post(`${BASE_API_URL}/signup`).send({
-                username: 'user1',
-                email: 'user1@email.com',
-                password: 'password1'
-            });
+            const response = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .send({
+                    username: 'user1',
+                    email: 'user1@email.com',
+                    password: 'password1'
+                });
             expect(response.status).toEqual(201);
 
             expect(response.header['set-cookie']).toBeDefined();
@@ -119,11 +123,30 @@ describe('AUTH E2E', () => {
         });
 
         it('Should check if user is already logged in', async () => {
-            const response = await agent.post(`${BASE_API_URL}/signup`).send({
-                username: 'user1',
-                email: 'user1@email.com',
-                password: 'password1'
-            });
+            const newSignupRes = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .send({
+                    username: 'user1',
+                    email: 'user1@email.com',
+                    password: 'password1'
+                });
+            expect(newSignupRes.status).toEqual(201);
+
+            expect(newSignupRes.header['set-cookie']).toBeDefined();
+            expect(newSignupRes.header['set-cookie'][0]).toContain(
+                'connect.sid'
+            );
+
+            expect(newSignupRes.body).toHaveProperty('success', true);
+
+            const response = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .set('Cookie', newSignupRes.headers['set-cookie'])
+                .send({
+                    username: 'user1',
+                    email: 'user1@email.com',
+                    password: 'password1'
+                });
 
             expect(response.status).toEqual(400);
             expect(response.body).toHaveProperty('success', false);
@@ -267,6 +290,7 @@ describe('AUTH E2E', () => {
                     email: 'user1@email.com',
                     password: 'password1'
                 });
+
             expect(signupRes.status).toEqual(201);
 
             expect(signupRes.header['set-cookie']).toBeDefined();
@@ -274,20 +298,13 @@ describe('AUTH E2E', () => {
 
             expect(signupRes.body).toHaveProperty('success', true);
 
-            const loginRes = await request(app)
+            const reLoginRes = await request(app)
                 .post(`${BASE_API_URL}/login`)
+                .set('Cookie', signupRes.headers['set-cookie'])
                 .send({
                     username: 'user1',
                     password: 'password1'
                 });
-
-            expect(loginRes.status).toEqual(200);
-            expect(loginRes.body).toHaveProperty('success', true);
-
-            const reLoginRes = await agent.post(`${BASE_API_URL}/login`).send({
-                username: 'user1',
-                password: 'password1'
-            });
 
             expect(reLoginRes.status).toEqual(400);
             expect(reLoginRes.body).toHaveProperty('success', false);
