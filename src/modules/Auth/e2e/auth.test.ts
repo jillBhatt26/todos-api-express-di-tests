@@ -448,6 +448,126 @@ describe('AUTH E2E', () => {
         });
     });
 
+    describe('PUT /auth', () => {
+        let cookie: string;
+
+        beforeEach(async () => {
+            const signupRes = await request(app)
+                .post(`${BASE_API_URL}/signup`)
+                .send({
+                    username: 'user1',
+                    email: 'user1@email.com',
+                    password: 'password'
+                });
+
+            expect(signupRes.status).toEqual(201);
+            expect(signupRes.body).toHaveProperty('success', true);
+
+            expect(signupRes.header['set-cookie']).toBeDefined();
+            expect(signupRes.header['set-cookie'][0]).toContain('connect.sid');
+
+            cookie = signupRes.headers['set-cookie'];
+        });
+
+        it('Should validate session before updating user info', async () => {
+            expect(cookie).not.toBeUndefined();
+
+            const { status, body } = await request(app).put(BASE_API_URL);
+
+            expect(status).toEqual(401);
+            expect(body).toHaveProperty('success', false);
+            expect(body).toHaveProperty('error');
+            expect(body.error).toHaveProperty(
+                'message',
+                'You will have to log in first!'
+            );
+        });
+
+        it('Should see if username is available before updating username', async () => {
+            expect(cookie).not.toBeUndefined();
+
+            const { status, body } = await request(app)
+                .put(BASE_API_URL)
+                .send({
+                    username: 'user1'
+                })
+                .set('Cookie', cookie);
+
+            expect(status).toEqual(400);
+            expect(body).toHaveProperty('success', false);
+            expect(body).toHaveProperty('error');
+            expect(body.error).toEqual(
+                expect.objectContaining({
+                    code: 400,
+                    message: 'Username already in use!'
+                })
+            );
+        });
+
+        it('Should see if email is available before updating email', async () => {
+            expect(cookie).not.toBeUndefined();
+
+            const { status, body } = await request(app)
+                .put(BASE_API_URL)
+                .send({
+                    email: 'user1@email.com'
+                })
+                .set('Cookie', cookie);
+
+            expect(status).toEqual(400);
+            expect(body).toHaveProperty('success', false);
+            expect(body).toHaveProperty('error');
+            expect(body.error).toEqual(
+                expect.objectContaining({
+                    code: 400,
+                    message: 'Email already in use!'
+                })
+            );
+        });
+
+        it('Should should update user info and destroy session', async () => {
+            expect(cookie).not.toBeUndefined();
+
+            const { status, body } = await request(app)
+                .put(BASE_API_URL)
+                .send({
+                    username: 'updatedUser1',
+                    email: 'updatedUser1@email.com',
+                    password: 'updatedPassword1'
+                })
+                .set('Cookie', cookie);
+
+            expect(status).toEqual(200);
+            expect(body).toHaveProperty('success', true);
+            expect(body).toHaveProperty('data');
+            expect(body.data).toHaveProperty('user');
+            expect(body.data.user).toHaveProperty('_id');
+            expect(body.data.user).toHaveProperty('username', 'updatedUser1');
+            expect(body.data.user).toHaveProperty(
+                'email',
+                'updatedUser1@email.com'
+            );
+            expect(body.data.user).not.toHaveProperty('password');
+
+            const sessionTestResponse = await request(app)
+                .put(BASE_API_URL)
+                .send({
+                    username: 'updatedUser1',
+                    email: 'updatedUser1@email.com',
+                    password: 'updatedPassword1'
+                })
+                .set('Cookie', cookie);
+
+            expect(sessionTestResponse.status).toEqual(401);
+            expect(sessionTestResponse.body).toHaveProperty('success', false);
+            expect(sessionTestResponse.body).toHaveProperty('error');
+            expect(sessionTestResponse.body.error).toHaveProperty(
+                'message',
+                'You will have to log in first!'
+            );
+        });
+    });
+
     afterAll(async () => {
         await conn.connection.dropCollection('auths');
         await conn.connection.dropDatabase();

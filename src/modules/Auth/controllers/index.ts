@@ -3,7 +3,7 @@ import { autoInjectable, container, inject, singleton } from 'tsyringe';
 import { ICustomError } from '@interfaces';
 import AuthServices from '../services';
 import PasswordUtils from '../utils/Password';
-import { IAuthInfo } from '../interfaces';
+import { IAuthInfo, IAuthModel } from '../interfaces';
 
 @autoInjectable()
 @singleton()
@@ -280,6 +280,97 @@ class AuthControllers {
         });
     };
 
+    // public updateUser = async (
+    //     req: Request,
+    //     res: Response,
+    //     next: NextFunction
+    // ) => {
+    //     if (!req.session || !req.session.userID || !req.session.username) {
+    //         return next({
+    //             code: 500,
+    //             message: 'Authentication required to update user!'
+    //         } as ICustomError);
+    //     }
+
+    //     // validate inputs
+    //     let { username, email, password } = req.body;
+
+    //     if (username) username = username.trim();
+    //     if (email) email = email.trim();
+    //     if (password) password = password.trim();
+
+    //     if (
+    //         (username && !username.length) ||
+    //         (email && !email.length) ||
+    //         (password && !password.length)
+    //     ) {
+    //         const error: ICustomError = {
+    //             code: 400,
+    //             message: 'Empty user details provided!'
+    //         };
+
+    //         return next(error);
+    //     }
+
+    //     try {
+    //         // validate  username and email availability
+    //         const checkUserExists = await this.authService.findById(
+    //             req.session.userID
+    //         );
+
+    //         if (!checkUserExists) {
+    //             const error: ICustomError = {
+    //                 code: 400,
+    //                 message:
+    //                     'User not found! Please try with different email or username!'
+    //             };
+
+    //             return next(error);
+    //         }
+
+    //         const toUpdateValues = {
+    //             ...checkUserExists,
+    //             username,
+    //             email
+    //         };
+
+    //         // create user in db
+    //         if (password) {
+    //             const hashedPassword = await this.passwordUtils.hash(password);
+
+    //             toUpdateValues.password = hashedPassword;
+    //         }
+
+    //         const updatedUser = await this.authService.findByIdAndUpdate(
+    //             req.session.userID,
+    //             toUpdateValues
+    //         );
+
+    //         if (!updatedUser || !updatedUser.id || !updatedUser.username) {
+    //             return next({
+    //                 code: 400,
+    //                 message: 'Failed to update user!'
+    //             } as ICustomError);
+    //         }
+
+    //         // start session
+    //         req.session.userID = updatedUser.id;
+    //         req.session.username = updatedUser.username;
+
+    //         return res.status(201).json({
+    //             success: true,
+    //             data: {
+    //                 newUser: updatedUser
+    //             }
+    //         });
+    //     } catch (error: unknown) {
+    //         return next({
+    //             code: 500,
+    //             message: 'User update failed!'
+    //         } as ICustomError);
+    //     }
+    // };
+
     public updateUser = async (
         req: Request,
         res: Response,
@@ -292,82 +383,65 @@ class AuthControllers {
             } as ICustomError);
         }
 
-        // validate inputs
-        let { username, email, password } = req.body;
+        let toUpdateObject: Partial<IAuthModel> = {};
 
-        if (username) username = username.trim();
-        if (email) email = email.trim();
-        if (password) password = password.trim();
+        const { username, email, password } = req.body;
+        const userID: string = req.session.userID;
 
-        if (
-            (username && !username.length) ||
-            (email && !email.length) ||
-            (password && !password.length)
-        ) {
-            const error: ICustomError = {
-                code: 400,
-                message: 'Empty user details provided!'
-            };
+        if (username && username.trim().length) {
+            const checkUsernameAvailable = await this.authService.findOne({
+                username: username.trim()
+            });
 
-            return next(error);
-        }
-
-        try {
-            // validate  username and email availability
-            const checkUserExists = await this.authService.findById(
-                req.session.userID
-            );
-
-            if (!checkUserExists) {
-                const error: ICustomError = {
-                    code: 400,
-                    message:
-                        'User not found! Please try with different email or username!'
-                };
-
-                return next(error);
-            }
-
-            const toUpdateValues = {
-                ...checkUserExists,
-                username,
-                email
-            };
-
-            // create user in db
-            if (password) {
-                const hashedPassword = await this.passwordUtils.hash(password);
-
-                toUpdateValues.password = hashedPassword;
-            }
-
-            const updatedUser = await this.authService.findByIdAndUpdate(
-                req.session.userID,
-                toUpdateValues
-            );
-
-            if (!updatedUser || !updatedUser.id || !updatedUser.username) {
+            if (checkUsernameAvailable) {
                 return next({
                     code: 400,
-                    message: 'Failed to update user!'
+                    message: 'Username already in use!'
                 } as ICustomError);
             }
 
-            // start session
-            req.session.userID = updatedUser.id;
-            req.session.username = updatedUser.username;
+            toUpdateObject.username = username.trim();
+        }
 
-            return res.status(201).json({
-                success: true,
-                data: {
-                    newUser: updatedUser
-                }
+        if (email && email.trim().length) {
+            const checkEmailAvailable = await this.authService.findOne({
+                email: email.trim()
             });
-        } catch (error: unknown) {
-            return next({
-                code: 500,
-                message: 'User update failed!'
-            } as ICustomError);
+
+            if (checkEmailAvailable) {
+                return next({
+                    code: 400,
+                    message: 'Email already in use!'
+                } as ICustomError);
+            }
+
+            toUpdateObject.email = email.trim();
+        }
+
+        if (password && password.trim().length) {
+            const hashedPassword = await this.passwordUtils.hash(
+                password.trim()
+            );
+
+            toUpdateObject.password = hashedPassword;
+
+            req.session.destroy(async error => {
+                if (error)
+                    return next({
+                        code: 500,
+                        message: 'Error occurred while updating user!'
+                    } as ICustomError);
+
+                const updatedUser = await this.authService.findByIdAndUpdate(
+                    userID,
+                    toUpdateObject,
+                    { password: 0 }
+                );
+
+                return res
+                    .status(200)
+                    .json({ success: true, data: { user: updatedUser } });
+            });
         }
     };
 

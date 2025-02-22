@@ -131,7 +131,8 @@ class DBServices<T extends Document> {
 
     findByIdAndUpdate = async (
         resourceId: string,
-        updateResourceData: Partial<T>
+        updateResourceData: Partial<T>,
+        projection?: ProjectionType<Record<keyof T, any>> | null
     ): Promise<T | null> => {
         try {
             const data: T | null = await this.model.findByIdAndUpdate(
@@ -143,6 +144,15 @@ class DBServices<T extends Document> {
                     new: true
                 }
             );
+
+            if (data && projection) {
+                const projectionData: T | null = await this.model.findById(
+                    resourceId,
+                    projection
+                );
+
+                return projectionData;
+            }
 
             return data;
         } catch (error: unknown) {
