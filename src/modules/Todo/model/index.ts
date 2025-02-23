@@ -10,16 +10,18 @@ class TodosModel implements IDBModel<ITodo> {
         {
             name: {
                 type: String,
-                required: true
+                required: [true, 'Name of the task is required'],
+                trim: true
             },
             description: {
                 type: String,
-                required: true
+                required: [true, 'Task description is required']
             },
             status: {
                 type: String,
                 enum: ETodoStatus,
-                required: true,
+                required: [true, 'Task status is required'],
+                trim: true,
                 default: ETodoStatus.PENDING
             }
         },

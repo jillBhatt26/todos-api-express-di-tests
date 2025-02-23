@@ -1,5 +1,6 @@
 import { Model, Schema, model } from 'mongoose';
 import { autoInjectable, container } from 'tsyringe';
+import isEmail from 'validator/lib/isEmail';
 import { IDBModel } from '@interfaces';
 import { IAuthModel } from '../interfaces';
 
@@ -9,19 +10,20 @@ class AuthModel implements IDBModel<IAuthModel> {
         {
             username: {
                 type: String,
-                required: true,
-                unique: true,
+                required: [true, 'Username is required'],
+                unique: [true, 'Username is already in use'],
                 trim: true
             },
             email: {
                 type: String,
-                required: true,
-                unique: true,
-                trim: true
+                required: [true, 'Email is required'],
+                unique: [true, 'Email is already in use'],
+                trim: true,
+                validate: [isEmail, 'Email format is invalid']
             },
             password: {
                 type: String,
-                required: true,
+                required: [true, 'Password is required'],
                 trim: true
             }
         },
