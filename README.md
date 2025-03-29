@@ -1,8 +1,6 @@
-
 # Express TypeScript Dependency Injection
 
 Harness the flexibility of express.js with the power and structure of nest.js to build scalable APIs by implementing dependency injection.
-
 
 ## Tech Stack
 
@@ -20,21 +18,16 @@ Harness the flexibility of express.js with the power and structure of nest.js to
 
 **Supertest e2e testing**
 
-
 ## Features
 
-- Express TypeScript
-- Class components for services and controllers
-- Injectable Databse Services and Models
-- Demonstration of classes usage by dependency injection
-- Jest unit and Supertest e2e tests
-- GitHub Actions Workflow for testing and release
-- Path aliasing for development, test and production environments.
-- Swagger documentation for manual API testing
-## Documentation
-
-[Documentation](https://linktodocumentation)
-
+-   Express TypeScript
+-   Class components for services and controllers
+-   Injectable Databse Services and Models
+-   Demonstration of classes usage by dependency injection
+-   Jest unit and Supertest e2e tests
+-   GitHub Actions Workflow for testing and release
+-   Path aliasing for development, test and production environments.
+-   Swagger documentation for manual API testing
 
 ## Usage
 
@@ -85,7 +78,7 @@ Start production build
 ```bash
   yarn prod
 ```
-    
+
 ## Environment Variables
 
 `NODE_ENV = development`
