@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Mongoose, Schema } from 'mongoose';
+import mongoose, { Mongoose, Schema } from 'mongoose';
 import { container } from 'tsyringe';
 import { jest } from '@jest/globals';
 import { TEST_DB_URL } from '@config/env';
@@ -58,7 +58,7 @@ describe('Todos Services tests', () => {
     let conn: Mongoose;
     const todosServices = container.resolve(TodosServices);
     const authServices = container.resolve(AuthServices);
-    let userID: Schema.Types.ObjectId;
+    let userID: mongoose.Types.ObjectId;
 
     beforeAll(async () => {
         await connection.disconnectMongoDB();
@@ -78,7 +78,7 @@ describe('Todos Services tests', () => {
         expect(newUser.id).toBeDefined();
         expect(newUser._id).toBeDefined();
 
-        userID = newUser._id as Schema.Types.ObjectId;
+        userID = newUser._id as mongoose.Types.ObjectId;
     });
 
     beforeEach(async () => {

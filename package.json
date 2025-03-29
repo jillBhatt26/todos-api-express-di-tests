@@ -7,8 +7,8 @@
         "build": "tsc -p ./ && tsc-alias -p ./tsconfig.json",
         "prod": "node ./dist/index.js",
         "dev": "nodemon ./src/index.ts",
-        "test": "jest --forceExit --runInBand",
-        "test:watch": "jest --forceExit --runInBand --watchAll",
+        "test": "jest --forceExit --runInBand --detectOpenHandles",
+        "test:watch": "jest --forceExit --runInBand --detectOpenHandles --watchAll",
         "dev:test": "concurrently \"yarn dev\" \"yarn test:watch\""
     },
     "devDependencies": {

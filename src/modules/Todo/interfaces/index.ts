@@ -1,23 +1,23 @@
-import { Document, ObjectId } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { ETodoStatus } from '../enums';
 
 export interface ITodo extends Document {
     name: string;
     description: string;
     status: ETodoStatus;
-    userID: ObjectId;
+    userID: mongoose.Types.ObjectId;
 }
 
 export interface ICreateTodoData {
     name: string;
     description: string;
-    userID: ObjectId;
+    userID: mongoose.Types.ObjectId;
     status?: ETodoStatus;
 }
 
 export interface IUpdateTodoData {
     name?: string;
     description?: string;
-    userID: ObjectId;
+    userID: mongoose.Types.ObjectId;
     status?: ETodoStatus;
 }

@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { Schema } from 'mongoose';
+import mongoose from 'mongoose';
 import { singleton, autoInjectable, container, inject } from 'tsyringe';
 import TodosServices from '../services';
 import { ITodo } from '../interfaces';
@@ -122,7 +122,7 @@ class TodosController {
                 });
             }
 
-            const userObjectID = new Schema.Types.ObjectId(userID);
+            const userObjectID = new mongoose.Types.ObjectId(userID);
 
             const newTask: ITodo = await this.todosService.create({
                 name,
@@ -184,7 +184,7 @@ class TodosController {
 
             const { name, description, status } = req.body;
 
-            const userObjectID = new Schema.Types.ObjectId(userID);
+            const userObjectID = new mongoose.Types.ObjectId(userID);
 
             const updatedTask: ITodo | null =
                 await this.todosService.findByIdAndUpdate(taskID, {
