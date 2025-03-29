@@ -6,9 +6,10 @@ const options: swaggerJSDoc.Options = {
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'Todos API using Express, Typescript, MongoDB and DI',
+            title: 'Dependency Injection in Express.js (TypeScript)',
             version: '1.0.0',
-            description: 'A simple Express API to manage your tasks!'
+            description:
+                'Harness the flexibility of express.js with the power and structure of nest.js to build scalable APIs by implementing dependency injection.'
         },
         schemes: ['http', 'https'],
         servers: [

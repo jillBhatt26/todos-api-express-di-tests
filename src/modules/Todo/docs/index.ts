@@ -204,9 +204,6 @@
  *     summary: Returns os information
  *     tags: [Info]
  *
- *     security:
- *       - sessionAuth: []
- *
  *     responses:
  *       200:
  *         description: A successful response
