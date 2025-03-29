@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Mongoose } from 'mongoose';
+import { Mongoose, Schema } from 'mongoose';
 import { container } from 'tsyringe';
 import { jest } from '@jest/globals';
 import { TEST_DB_URL } from '@config/env';
@@ -8,6 +8,7 @@ import connection from '@db/connection';
 import { ITodo } from '@modules/Todo/interfaces';
 import { ETodoStatus } from '@modules/Todo/enums';
 import TodosServices from '..';
+import AuthServices from '@modules/Auth/services';
 
 jest.setTimeout(JEST_TIMEOUT);
 
@@ -56,6 +57,8 @@ jest.setTimeout(JEST_TIMEOUT);
 describe('Todos Services tests', () => {
     let conn: Mongoose;
     const todosServices = container.resolve(TodosServices);
+    const authServices = container.resolve(AuthServices);
+    let userID: Schema.Types.ObjectId;
 
     beforeAll(async () => {
         await connection.disconnectMongoDB();
@@ -63,8 +66,25 @@ describe('Todos Services tests', () => {
         conn = await connection.connectMongoDB(TEST_DB_URL);
     });
 
+    beforeAll(async () => {
+        // create a user to use userID value
+        const newUser = await authServices.create({
+            username: 'user1',
+            email: 'user1@email.com',
+            password: 'password1'
+        });
+
+        expect(newUser).toBeDefined();
+        expect(newUser.id).toBeDefined();
+        expect(newUser._id).toBeDefined();
+
+        userID = newUser._id as Schema.Types.ObjectId;
+    });
+
     beforeEach(async () => {
         await todosServices.deleteAll();
+
+        expect(userID).toBeDefined();
     });
 
     describe('CREATE TODO', () => {
@@ -72,19 +92,21 @@ describe('Todos Services tests', () => {
             const todo: ITodo = await todosServices.create({
                 name: 'Name 1',
                 description: 'Description 1',
-                status: ETodoStatus.PENDING
+                status: ETodoStatus.PENDING,
+                userID
             });
 
             expect(todo).toHaveProperty('_id');
             expect(todo).toHaveProperty('name', 'Name 1');
             expect(todo).toHaveProperty('description', 'Description 1');
             expect(todo).toHaveProperty('status', ETodoStatus.PENDING);
+            expect(todo).toHaveProperty('userID', userID);
         });
     });
 
     describe('GET ALL TODOS', () => {
         it('Should return all documents of collection', async () => {
-            const todos: ITodo[] = await todosServices.find();
+            const todos: ITodo[] = await todosServices.find({ userID });
 
             expect(todos).not.toBeNull();
             expect(todos).not.toBeUndefined();
@@ -97,7 +119,8 @@ describe('Todos Services tests', () => {
             const newTodo: ITodo = await todosServices.create({
                 name: 'Name 2',
                 description: 'Description 2',
-                status: ETodoStatus.PENDING
+                status: ETodoStatus.PENDING,
+                userID
             });
 
             const todo: ITodo | null = await todosServices.findById(newTodo.id);
@@ -109,11 +132,13 @@ describe('Todos Services tests', () => {
             expect(todo).toHaveProperty('name');
             expect(todo).toHaveProperty('description');
             expect(todo).toHaveProperty('status');
+            expect(todo).toHaveProperty('userID');
 
             expect(todo!.id).toStrictEqual(newTodo.id);
             expect(todo!.name).toStrictEqual(newTodo.name);
             expect(todo!.description).toStrictEqual(newTodo.description);
             expect(todo!.status).toStrictEqual(newTodo.status);
+            expect(todo!.userID).toStrictEqual(userID);
         });
     });
 
@@ -122,7 +147,8 @@ describe('Todos Services tests', () => {
             const newTodo: ITodo = await todosServices.create({
                 name: 'Name 2',
                 description: 'Description 2',
-                status: ETodoStatus.PENDING
+                status: ETodoStatus.PENDING,
+                userID
             });
 
             const updatedTodo: ITodo | null =
@@ -137,11 +163,13 @@ describe('Todos Services tests', () => {
             expect(updatedTodo).toHaveProperty('name');
             expect(updatedTodo).toHaveProperty('description');
             expect(updatedTodo).toHaveProperty('status');
+            expect(updatedTodo).toHaveProperty('userID');
 
             expect(updatedTodo!.id).toStrictEqual(newTodo.id);
             expect(updatedTodo!.name).toStrictEqual(newTodo.name);
             expect(updatedTodo!.description).toStrictEqual(newTodo.description);
             expect(updatedTodo!.status).toStrictEqual(ETodoStatus.PROGRESS);
+            expect(updatedTodo!.userID).toStrictEqual(userID);
         });
     });
 
@@ -150,7 +178,8 @@ describe('Todos Services tests', () => {
             const newTodo: ITodo = await todosServices.create({
                 name: 'Name 2',
                 description: 'Description 2',
-                status: ETodoStatus.PENDING
+                status: ETodoStatus.PENDING,
+                userID
             });
 
             const deletedTodo: ITodo | null =
@@ -162,7 +191,9 @@ describe('Todos Services tests', () => {
     });
 
     afterAll(async () => {
+        await authServices.deleteAll();
         await conn.connection.dropCollection('todos');
+        await conn.connection.dropCollection('auths');
         await conn.connection.dropDatabase();
         await connection.disconnectMongoDB();
     });

@@ -203,6 +203,10 @@
  *   get:
  *     summary: Returns os information
  *     tags: [Info]
+ *
+ *     security:
+ *       - sessionAuth: []
+ *
  *     responses:
  *       200:
  *         description: A successful response
@@ -214,6 +218,10 @@
  *          get:
  *              summary: Fetches all the todos
  *              tags: [Todos]
+ *
+ *              security:
+ *                  - sessionAuth: []
+ *
  *              responses:
  *                  200:
  *                      description: Returns an array of all the todos
@@ -234,6 +242,10 @@
  *          post:
  *              summary: Creates new todo
  *              tags: [Todos]
+ *
+ *              security:
+ *                  - sessionAuth: []
+ *
  *              requestBody:
  *                  required: true
  *                  content:
@@ -274,6 +286,10 @@
  *          get:
  *              summary: Finds the Todo using the id provided
  *              tags: [Todos]
+ * 
+ *              security:
+ *                  - sessionAuth: []
+ *
  *
  *              parameters:
  *                  - in: path
@@ -311,6 +327,10 @@
  *          put:
  *              summary: Finds and updates the required Todo
  *              tags: [Todos]
+ * 
+ *              security:
+ *                  - sessionAuth: []
+ *
  *
  *              parameters:
  *                  - in: path
@@ -364,6 +384,9 @@
  *          delete:
  *              summary: Finds and deletes the required Todo
  *              tags: [Todos]
+ * 
+ *              security:
+ *                  - sessionAuth: []
  *
  *              parameters:
  *                  - in: path

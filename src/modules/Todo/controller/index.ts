@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
+import { Schema } from 'mongoose';
 import { singleton, autoInjectable, container, inject } from 'tsyringe';
 import TodosServices from '../services';
 import { ITodo } from '../interfaces';
@@ -18,7 +19,16 @@ class TodosController {
         next: NextFunction
     ) => {
         try {
-            const tasks: ITodo[] = await this.todosService.find();
+            const { userID, username } = req.session;
+
+            if (!userID || !username) {
+                return next({
+                    code: 401,
+                    message: 'You need to login first!'
+                });
+            }
+
+            const tasks: ITodo[] = await this.todosService.find({ userID });
 
             return res.status(200).json({
                 success: true,
@@ -43,6 +53,15 @@ class TodosController {
 
     fetchTodoByID = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const { userID, username } = req.session;
+
+            if (!userID || !username) {
+                return next({
+                    code: 401,
+                    message: 'You need to login first!'
+                });
+            }
+
             const taskID: string | undefined = req.params.id;
 
             if (!taskID) {
@@ -85,6 +104,15 @@ class TodosController {
 
     createTodo = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const { userID, username } = req.session;
+
+            if (!userID || !username) {
+                return next({
+                    code: 401,
+                    message: 'You need to login first!'
+                });
+            }
+
             const { name, description, status } = req.body;
 
             if (!name || !description) {
@@ -94,10 +122,13 @@ class TodosController {
                 });
             }
 
+            const userObjectID = new Schema.Types.ObjectId(userID);
+
             const newTask: ITodo = await this.todosService.create({
                 name,
                 description,
-                status
+                status,
+                userID: userObjectID
             });
 
             return res.status(201).json({
@@ -123,6 +154,15 @@ class TodosController {
 
     updateTodo = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const { userID, username } = req.session;
+
+            if (!userID || !username) {
+                return next({
+                    code: 401,
+                    message: 'You need to login first!'
+                });
+            }
+
             const taskID: string | undefined = req.params.id;
 
             if (!taskID) {
@@ -144,11 +184,14 @@ class TodosController {
 
             const { name, description, status } = req.body;
 
+            const userObjectID = new Schema.Types.ObjectId(userID);
+
             const updatedTask: ITodo | null =
                 await this.todosService.findByIdAndUpdate(taskID, {
                     name,
                     description,
-                    status
+                    status,
+                    userID: userObjectID
                 });
 
             return res.status(200).json({
@@ -174,6 +217,15 @@ class TodosController {
 
     deleteTodo = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            const { userID, username } = req.session;
+
+            if (!userID || !username) {
+                return next({
+                    code: 401,
+                    message: 'You need to login first!'
+                });
+            }
+
             const taskID: string | undefined = req.params.id;
 
             if (!taskID) {

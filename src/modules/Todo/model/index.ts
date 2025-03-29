@@ -23,6 +23,11 @@ class TodosModel implements IDBModel<ITodo> {
                 required: [true, 'Task status is required'],
                 trim: true,
                 default: ETodoStatus.PENDING
+            },
+            userID: {
+                type: Schema.Types.ObjectId,
+                ref: 'auths',
+                required: [true, 'User information is required']
             }
         },
         { timestamps: true }

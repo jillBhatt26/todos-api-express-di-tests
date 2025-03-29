@@ -1,16 +1,17 @@
 import { Router } from 'express';
+import authMiddleware from '@middleware/auth';
 import todosController from '../controller';
 
 const TodosRouter: Router = Router();
 
-TodosRouter.get('/', todosController.fetchTodosAll);
+TodosRouter.get('/', authMiddleware.strict, todosController.fetchTodosAll);
 
-TodosRouter.post('/', todosController.createTodo);
+TodosRouter.post('/', authMiddleware.strict, todosController.createTodo);
 
-TodosRouter.get('/:id', todosController.fetchTodoByID);
+TodosRouter.get('/:id', authMiddleware.strict, todosController.fetchTodoByID);
 
-TodosRouter.put('/:id', todosController.updateTodo);
+TodosRouter.put('/:id', authMiddleware.strict, todosController.updateTodo);
 
-TodosRouter.delete('/:id', todosController.deleteTodo);
+TodosRouter.delete('/:id', authMiddleware.strict, todosController.deleteTodo);
 
 export { TodosRouter };
